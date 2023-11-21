@@ -1,0 +1,39 @@
+[project]
+name = "sopsy"
+version = "0.0.0"
+description = "SOPS Python wrapper library"
+authors = [{ name = "Nicolas Karolak", email = "nicolas@karolak.fr" }]
+dependencies = ["pyyaml>=6.0.1"]
+readme = "README.md"
+requires-python = ">= 3.11"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = [
+  "ruff>=0.1.6",
+  "mypy>=1.7.0",
+  "types-pyyaml>=6.0.12.12",
+  "pytest>=7.4.3",
+]
+
+[tool.rye.scripts]
+lint = { chain = ["lint:ruff", "lint:ruff-fmt", "lint:mypy"] }
+"lint:ruff" = "ruff ./src/"
+"lint:ruff-fmt" = "ruff format --check ./src/"
+"lint:mypy" = "mypy ./src/"
+test = "pytest"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.ruff]
+select = ["ALL"]
+ignore = ["COM812", "D203", "D212"]
+
+[tool.commitizen]
+version_provider = "pep621"
+update_changelog_on_bump = true

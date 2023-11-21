@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  # renovate: datasource=github-releases depName=mitsuhiko/rye
+  RYE_VERSION: 0.15.2
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Run pre-commit
+        uses: nikaro/actions/pre-commit@87c751d6333bb87cea805934a9ca12d7f09fdcb4 # 1.0.5
+        with:
+          python-version: 3.12
+
+  test:
+    name: Test
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+
+      - name: Cache Rye installation
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
+        with:
+          path: ~/.rye
+          key: ${{ runner.os }}-rye-${{ env.RYE_VERSION }}
+
+      - name: Install Rye
+        run: curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
+
+      - name: Append Rye to PATH
+        run: echo "$HOME/.rye/shims" >> "$GITHUB_PATH"
+
+      - name: Install dependencies
+        run: rye sync --no-lock
+
+      - name: Test
+        run: rye run test
+
+  check:
+    name: Check
+    permissions: {}
+    runs-on: ubuntu-22.04
+    needs: [lint, test]
+    if: always()
+    steps:
+      - name: Ensure no jobs failed
+        uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
+        with:
+          jobs: ${{ toJSON(needs) }}
