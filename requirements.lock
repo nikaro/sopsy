@@ -7,4 +7,3 @@
 #   all-features: false
 
 -e file:.
-pyyaml==6.0.1

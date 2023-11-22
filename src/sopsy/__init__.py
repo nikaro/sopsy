@@ -10,7 +10,12 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Any, Self, TypeAlias
 
-import yaml
+try:
+    import yaml
+except ImportError:
+    _has_yaml = False
+else:
+    _has_yaml = True
 
 SopsyCmdOutput: TypeAlias = bytes | dict[str, Any] | None
 
@@ -80,8 +85,9 @@ class Sops:
         with contextlib.suppress(json.JSONDecodeError):
             out = json.loads(data)
 
-        with contextlib.suppress(yaml.YAMLError):
-            out = yaml.safe_load(data)
+        if _has_yaml:
+            with contextlib.suppress(yaml.YAMLError):
+                out = yaml.safe_load(data)
 
         if not out:
             raise SopsyUnparsableOutpoutTypeError

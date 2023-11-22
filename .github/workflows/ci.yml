@@ -47,7 +47,7 @@ jobs:
         run: echo "$HOME/.rye/shims" >> "$GITHUB_PATH"
 
       - name: Install dependencies
-        run: rye sync --no-lock
+        run: rye sync --all-features
 
       - name: Test
         run: rye run test
