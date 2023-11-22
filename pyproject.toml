@@ -1,6 +1,6 @@
 [project]
 name = "sopsy"
-version = "0.1.1"
+version = "0.1.2"
 description = "SOPS Python wrapper library"
 authors = [{ name = "Nicolas Karolak", email = "nicolas@karolak.fr" }]
 dependencies = []
