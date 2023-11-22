@@ -6,9 +6,28 @@ authors = [{ name = "Nicolas Karolak", email = "nicolas@karolak.fr" }]
 dependencies = []
 readme = "README.md"
 requires-python = ">= 3.11"
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Security :: Cryptography",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
+]
+license = { file = "LICENSE" }
+keywords = ["sops"]
 
 [project.optional-dependencies]
 yaml = ["pyyaml>=6.0.1"]
+
+[project.urls]
+Homepage = "https://github.com/nikaro/sopsy"
+Repository = "https://github.com/nikaro/sopsy"
+Issues = "https://github.com/nikaro/sopsy/issues"
+Changelog = "https://github.com/nikaro/sopsy/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["hatchling"]
