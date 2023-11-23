@@ -61,17 +61,8 @@ jobs:
           skipIfReleaseExists: true
           tag: ${{ env.REVISION }}
 
-      - name: Cache Rye installation
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
-        with:
-          path: ~/.rye
-          key: ${{ runner.os }}-rye-${{ env.RYE_VERSION }}
-
-      - name: Install Rye
-        run: curl -sSf https://rye-up.com/get | RYE_INSTALL_OPTION="--yes" bash
-
-      - name: Append Rye to PATH
-        run: echo "$HOME/.rye/shims" >> "$GITHUB_PATH"
+      - name: Setup Rye
+        uses: nikaro/actions/setup-rye@a13f6d4f688f32fdb1393053b543476d9768797f # 1.2.0
 
       - name: Build package
         run: rye build
