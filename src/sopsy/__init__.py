@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import contextlib
 import json
 import shutil
 import subprocess
@@ -81,16 +80,21 @@ class Sops:
     def _to_dict(self: Self, data: bytes) -> dict[str, Any]:
         """Parse data and return a dict from it."""
         out = {}
+        err: Exception | None = None
 
-        with contextlib.suppress(json.JSONDecodeError):
+        try:
             out = json.loads(data)
+        except json.JSONDecodeError as json_err:
+            err = json_err
 
         if _has_yaml:
-            with contextlib.suppress(yaml.YAMLError):
+            try:
                 out = yaml.safe_load(data)
+            except yaml.YAMLError as yaml_err:
+                err = yaml_err
 
         if not out:
-            raise SopsyUnparsableOutpoutTypeError
+            raise SopsyUnparsableOutpoutTypeError from err
 
         return out
 
