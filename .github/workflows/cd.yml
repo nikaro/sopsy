@@ -62,7 +62,7 @@ jobs:
           tag: ${{ env.REVISION }}
 
       - name: Setup Rye
-        uses: nikaro/actions/setup-rye@f85dd97f0c8081bcb5dff5616f46009fc1e2d72d # 1.2.1
+        uses: nikaro/actions/setup-rye@3234e8e77308bd94a2545091dcd479bf0d0086ca # 1.2.2
 
       - name: Build package
         run: rye build
