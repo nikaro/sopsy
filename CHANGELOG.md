@@ -1,3 +1,9 @@
+## 0.2.0 (2023-11-30)
+
+### Feat
+
+- add shortcut function `get`
+
 ## 0.1.3 (2023-11-23)
 
 ### Fix
