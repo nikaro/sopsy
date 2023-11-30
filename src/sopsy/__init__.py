@@ -120,6 +120,13 @@ class Sops:
         cmd = ["sops", "--encrypt", *self.global_args, str(self.file)]
         return self._run_cmd(cmd, to_dict=to_dict)
 
+    def get(self: Self, key: str, *, default: str | None = None) -> str | None:
+        """Get a specific key from a SOPS encrypted file."""
+        data = self.decrypt()
+        if isinstance(data, dict):
+            return data.get(key) or default
+        return default
+
     def rotate(self: Self, *, to_dict: bool = True) -> SopsyCmdOutput:
         """Rotate encryption keys and re-encrypt values from SOPS file."""
         cmd = ["sops", "--rotate", *self.global_args, str(self.file)]

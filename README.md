@@ -15,7 +15,11 @@ pip install sopsy
 ```python
 from sopsy import Sops
 
-secrets = Sops("secrets.yml").decrypt()
+sops = Sops("secrets.yml")
+
+my_secret_key = sops.get("my_secret_key")
+# or
+secrets = sops.decrypt()
 my_secret_key = secrets.get("my_secret_key")
 
 print(my_secret_key)
