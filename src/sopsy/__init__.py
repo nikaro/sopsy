@@ -7,7 +7,11 @@ import shutil
 import subprocess
 from enum import StrEnum
 from pathlib import Path
-from typing import Any, Self, TypeAlias
+from typing import Any
+from typing import Literal
+from typing import Self
+from typing import TypeAlias
+from typing import overload
 
 try:
     import yaml
@@ -47,7 +51,7 @@ class SopsyCommandFailedError(SopsyError):
 class Sops:
     """SOPS file object."""
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self: Self,
         file: str,
         *,
@@ -110,10 +114,26 @@ class Sops:
             return self._to_dict(proc.stdout)
         return proc.stdout
 
+    @overload
+    def decrypt(self: Self, *, to_dict: Literal[True] = True) -> dict[str, Any] | None:
+        ...
+
+    @overload
+    def decrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None:
+        ...
+
     def decrypt(self: Self, *, to_dict: bool = True) -> SopsyCmdOutput:
         """Decrypt SOPS file."""
         cmd = ["sops", "--decrypt", *self.global_args, str(self.file)]
         return self._run_cmd(cmd, to_dict=to_dict)
+
+    @overload
+    def encrypt(self: Self, *, to_dict: Literal[True] = True) -> dict[str, Any] | None:
+        ...
+
+    @overload
+    def encrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None:
+        ...
 
     def encrypt(self: Self, *, to_dict: bool = True) -> SopsyCmdOutput:
         """Encrypt SOPS file."""
@@ -126,6 +146,14 @@ class Sops:
         if isinstance(data, dict):
             return data.get(key) or default
         return default
+
+    @overload
+    def rotate(self: Self, *, to_dict: Literal[True] = True) -> dict[str, Any] | None:
+        ...
+
+    @overload
+    def rotate(self: Self, *, to_dict: Literal[False]) -> bytes | None:
+        ...
 
     def rotate(self: Self, *, to_dict: bool = True) -> SopsyCmdOutput:
         """Rotate encryption keys and re-encrypt values from SOPS file."""

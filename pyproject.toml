@@ -56,6 +56,12 @@ allow-direct-references = true
 select = ["ALL"]
 ignore = ["COM812", "D203", "D212"]
 
+[tool.ruff.isort]
+force-single-line = true
+
+[tool.ruff.pylint]
+max-args = 15
+
 [tool.commitizen]
 version_provider = "pep621"
 update_changelog_on_bump = true
