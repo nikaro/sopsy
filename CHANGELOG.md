@@ -1,3 +1,9 @@
+## 0.2.1 (2023-12-13)
+
+### Fix
+
+- vary return type based on passed arg
+
 ## 0.2.0 (2023-11-30)
 
 ### Feat
