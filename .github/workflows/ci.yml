@@ -18,8 +18,6 @@ jobs:
 
       - name: Run pre-commit
         uses: nikaro/actions/pre-commit@fbd9437083a50b65e0243a96b0def467bde4045b # 1.2.7
-        with:
-          python-version: 3.12
 
   test:
     name: Test
