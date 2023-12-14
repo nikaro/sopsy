@@ -4,6 +4,7 @@
 # last locked with the following flags:
 #   pre: false
 #   features: []
-#   all-features: false
+#   all-features: true
 
 -e file:.
+pyyaml==6.0.1

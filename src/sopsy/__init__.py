@@ -5,13 +5,15 @@ from __future__ import annotations
 import json
 import shutil
 import subprocess
-from enum import StrEnum
+from enum import Enum
 from pathlib import Path
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Literal
-from typing import Self
-from typing import TypeAlias
 from typing import overload
+
+if TYPE_CHECKING:
+    from typing_extensions import Self
 
 try:
     import yaml
@@ -20,16 +22,18 @@ except ImportError:
 else:
     _has_yaml = True
 
-SopsyCmdOutput: TypeAlias = bytes | dict[str, Any] | None
 
-
-class SopsyInOutType(StrEnum):
+class SopsyInOutType(Enum):
     """SOPS output types."""
 
     BINARY = "binary"
     DOTENV = "dotenv"
     JSON = "json"
     YAML = "yaml"
+
+    def __str__(self: Self) -> str:
+        """Return the string used for str() calls."""
+        return f"{self.value}"
 
 
 class SopsyError(Exception):
@@ -73,13 +77,17 @@ class Sops:
         if in_place:
             self.global_args.extend(["--in-place"])
         if input_type:
-            self.global_args.extend(["--input-type", input_type])
+            self.global_args.extend(["--input-type", str(input_type)])
         if output:
             self.global_args.extend(["--output", output])
         if output_type:
-            self.global_args.extend(["--output-type", output_type])
+            self.global_args.extend(["--output-type", str(output_type)])
         if not shutil.which("sops"):
-            raise SopsyCommandNotFoundError
+            msg = (
+                "sops command not found, "
+                "you may need to install it and/or add it to your PATH"
+            )
+            raise SopsyCommandNotFoundError(msg)
 
     def _to_dict(self: Self, data: bytes) -> dict[str, Any]:
         """Parse data and return a dict from it."""
@@ -102,7 +110,12 @@ class Sops:
 
         return out
 
-    def _run_cmd(self: Self, cmd: list[str], *, to_dict: bool) -> SopsyCmdOutput:
+    def _run_cmd(
+        self: Self,
+        cmd: list[str],
+        *,
+        to_dict: bool,
+    ) -> bytes | dict[str, Any] | None:
         """Run the given SOPS command."""
         try:
             proc = subprocess.run(cmd, capture_output=True, check=True)  # noqa: S603
@@ -122,7 +135,7 @@ class Sops:
     def decrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None:
         ...
 
-    def decrypt(self: Self, *, to_dict: bool = True) -> SopsyCmdOutput:
+    def decrypt(self: Self, *, to_dict: bool = True) -> dict[str, Any] | bytes | None:
         """Decrypt SOPS file."""
         cmd = ["sops", "--decrypt", *self.global_args, str(self.file)]
         return self._run_cmd(cmd, to_dict=to_dict)
@@ -135,7 +148,7 @@ class Sops:
     def encrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None:
         ...
 
-    def encrypt(self: Self, *, to_dict: bool = True) -> SopsyCmdOutput:
+    def encrypt(self: Self, *, to_dict: bool = True) -> dict[str, Any] | bytes | None:
         """Encrypt SOPS file."""
         cmd = ["sops", "--encrypt", *self.global_args, str(self.file)]
         return self._run_cmd(cmd, to_dict=to_dict)
@@ -155,7 +168,7 @@ class Sops:
     def rotate(self: Self, *, to_dict: Literal[False]) -> bytes | None:
         ...
 
-    def rotate(self: Self, *, to_dict: bool = True) -> SopsyCmdOutput:
+    def rotate(self: Self, *, to_dict: bool = True) -> dict[str, Any] | bytes | None:
         """Rotate encryption keys and re-encrypt values from SOPS file."""
         cmd = ["sops", "--rotate", *self.global_args, str(self.file)]
         return self._run_cmd(cmd, to_dict=to_dict)

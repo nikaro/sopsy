@@ -5,7 +5,7 @@ description = "SOPS Python wrapper library"
 authors = [{ name = "Nicolas Karolak", email = "nicolas@karolak.fr" }]
 dependencies = []
 readme = "README.md"
-requires-python = ">= 3.11"
+requires-python = ">= 3.8"
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
