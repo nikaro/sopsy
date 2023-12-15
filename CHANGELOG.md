@@ -1,3 +1,9 @@
+## 0.2.3 (2023-12-15)
+
+### Fix
+
+- **typing**: allow dict for the get method
+
 ## 0.2.2 (2023-12-14)
 
 ### Fix
