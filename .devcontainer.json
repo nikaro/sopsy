@@ -2,12 +2,9 @@
   "name": "sopsy",
   "image": "ghcr.io/nikaro/debian-devcontainer:latest",
   "features": {
-    "ghcr.io/nikaro/features/direnv": {},
     "ghcr.io/nikaro/features/pre-commit": {},
-    "ghcr.io/nikaro/features/pulumi": {},
     "ghcr.io/nikaro/features/python": {},
-    "ghcr.io/nikaro/features/rye": {},
-    "ghcr.io/nikaro/features/sops": {}
+    "ghcr.io/nikaro/features/rye": {}
   },
   "customizations": {
     "vscode": {
@@ -22,6 +19,6 @@
     }
   },
   "postStartCommand": {
-    "make-sync": "make sync"
+    "rye-sync": "rye sync --all-features"
   }
 }

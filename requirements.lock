@@ -5,6 +5,7 @@
 #   pre: false
 #   features: []
 #   all-features: true
+#   with-sources: false
 
 -e file:.
 pyyaml==6.0.1
