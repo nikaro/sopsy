@@ -16,7 +16,7 @@ env:
   # renovate: datasource=pypi depName=commitizen
   COMMITIZEN_VERSION: 3.14.1
   # renovate: datasource=github-releases depName=mitsuhiko/rye
-  RYE_VERSION: 0.21.0
+  RYE_VERSION: 0.22.0
 
 jobs:
   ci:
@@ -55,14 +55,14 @@ jobs:
           commitizen_version: ${{ env.COMMITIZEN_VERSION }}
 
       - name: Release
-        uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
+        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           bodyFile: _changelog.md
           skipIfReleaseExists: true
           tag: ${{ env.REVISION }}
 
       - name: Setup Rye
-        uses: nikaro/actions/setup-rye@e279a865c36407ae0b95bcce39e8449084736092 # 1.3.13
+        uses: nikaro/actions/setup-rye@73e0dc723dad863ee2d6ac8be6f3671b43da1801 # 1.3.16
 
       - name: Build package
         run: rye build
