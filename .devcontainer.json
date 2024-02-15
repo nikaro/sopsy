@@ -2,21 +2,11 @@
   "name": "sopsy",
   "image": "ghcr.io/nikaro/debian-devcontainer:latest",
   "features": {
+    "ghcr.io/nikaro/features/base": {},
+    "ghcr.io/nikaro/features/mypy": {},
     "ghcr.io/nikaro/features/pre-commit": {},
-    "ghcr.io/nikaro/features/python": {},
+    "ghcr.io/nikaro/features/ruff": {},
     "ghcr.io/nikaro/features/rye": {}
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "charliermarsh.ruff",
-        "EditorConfig.EditorConfig",
-        "esbenp.prettier-vscode",
-        "matangover.mypy",
-        "ms-python.python",
-        "tamasfe.even-better-toml"
-      ]
-    }
   },
   "postStartCommand": {
     "rye-sync": "rye sync --all-features"
