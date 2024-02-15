@@ -3,13 +3,9 @@ name: CD
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - .github/**
-      - .cz.toml
-      - .gitignore
-      - .pre-commit-config.yaml
-      - .yamllint.yml
-      - CHANGELOG.md
+    paths:
+      - src/**
+      - pyproject.toml
   workflow_dispatch:
 
 env:
