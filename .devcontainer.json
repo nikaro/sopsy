@@ -9,6 +9,7 @@
     "ghcr.io/nikaro/features/rye": {}
   },
   "postStartCommand": {
-    "rye-sync": "rye sync --all-features"
+    "rye-config-uv": "mkdir -p /home/vscode/.rye && rye config --set-bool behavior.use-uv=true",
+    "rye-sync": "rye sync --all-features --no-lock"
   }
 }
