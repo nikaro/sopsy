@@ -34,7 +34,7 @@ repos:
       - id: yamllint
 
   - repo: https://github.com/rhysd/actionlint
-    rev: v1.6.26
+    rev: v1.6.27
     hooks:
       - id: actionlint
 
