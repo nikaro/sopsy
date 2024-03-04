@@ -128,12 +128,12 @@ class Sops:
         return proc.stdout
 
     @overload
-    def decrypt(self: Self, *, to_dict: Literal[True] = True) -> dict[str, Any] | None:
-        ...
+    def decrypt(
+        self: Self, *, to_dict: Literal[True] = True
+    ) -> dict[str, Any] | None: ...
 
     @overload
-    def decrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None:
-        ...
+    def decrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None: ...
 
     def decrypt(self: Self, *, to_dict: bool = True) -> dict[str, Any] | bytes | None:
         """Decrypt SOPS file."""
@@ -141,12 +141,12 @@ class Sops:
         return self._run_cmd(cmd, to_dict=to_dict)
 
     @overload
-    def encrypt(self: Self, *, to_dict: Literal[True] = True) -> dict[str, Any] | None:
-        ...
+    def encrypt(
+        self: Self, *, to_dict: Literal[True] = True
+    ) -> dict[str, Any] | None: ...
 
     @overload
-    def encrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None:
-        ...
+    def encrypt(self: Self, *, to_dict: Literal[False]) -> bytes | None: ...
 
     def encrypt(self: Self, *, to_dict: bool = True) -> dict[str, Any] | bytes | None:
         """Encrypt SOPS file."""
@@ -166,12 +166,12 @@ class Sops:
         return default
 
     @overload
-    def rotate(self: Self, *, to_dict: Literal[True] = True) -> dict[str, Any] | None:
-        ...
+    def rotate(
+        self: Self, *, to_dict: Literal[True] = True
+    ) -> dict[str, Any] | None: ...
 
     @overload
-    def rotate(self: Self, *, to_dict: Literal[False]) -> bytes | None:
-        ...
+    def rotate(self: Self, *, to_dict: Literal[False]) -> bytes | None: ...
 
     def rotate(self: Self, *, to_dict: bool = True) -> dict[str, Any] | bytes | None:
         """Rotate encryption keys and re-encrypt values from SOPS file."""

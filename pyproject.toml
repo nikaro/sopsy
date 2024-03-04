@@ -44,7 +44,7 @@ dev-dependencies = [
 
 [tool.rye.scripts]
 lint = { chain = ["lint:ruff", "lint:ruff-fmt", "lint:mypy"] }
-"lint:ruff" = "ruff ./src/"
+"lint:ruff" = "ruff check ./src/"
 "lint:ruff-fmt" = "ruff format --check ./src/"
 "lint:mypy" = "mypy ./src/"
 test = "pytest"
@@ -52,14 +52,14 @@ test = "pytest"
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.ruff]
+[tool.lint.ruff]
 select = ["ALL"]
 ignore = ["COM812", "D203", "D212"]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 force-single-line = true
 
-[tool.ruff.pylint]
+[tool.ruff.lint.pylint]
 max-args = 15
 
 [tool.commitizen]
