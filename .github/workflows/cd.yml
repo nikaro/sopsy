@@ -10,9 +10,9 @@ on:
 
 env:
   # renovate: datasource=pypi depName=commitizen
-  COMMITIZEN_VERSION: 3.16.0
+  COMMITIZEN_VERSION: 3.18.0
   # renovate: datasource=github-releases depName=mitsuhiko/rye
-  RYE_VERSION: 0.27.0
+  RYE_VERSION: 0.28.0
 
 jobs:
   ci:
@@ -36,7 +36,7 @@ jobs:
           fetch-depth: 0
 
       - name: Dry run
-        uses: commitizen-tools/commitizen-action@bc2616fec6b3effc9ad20380f19550a8b18cdbdf # 0.20.0
+        uses: commitizen-tools/commitizen-action@1f11eb222996406681d2bfa1eb3d997eca46557c # 0.21.0
         with:
           github_token: ${{ github.token }}
           changelog_increment_filename: _changelog.md
@@ -44,7 +44,7 @@ jobs:
           dry_run: true
 
       - name: Bump
-        uses: commitizen-tools/commitizen-action@bc2616fec6b3effc9ad20380f19550a8b18cdbdf # 0.20.0
+        uses: commitizen-tools/commitizen-action@1f11eb222996406681d2bfa1eb3d997eca46557c # 0.21.0
         with:
           github_token: ${{ github.token }}
           changelog_increment_filename: _changelog.md
@@ -64,6 +64,6 @@ jobs:
         run: rye build
 
       - name: Publish package to PyPI
-        uses: pypa/gh-action-pypi-publish@e53eb8b103ffcb59469888563dc324e3c8ba6f06 # v1.8.12
+        uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
         with:
           skip-existing: true
