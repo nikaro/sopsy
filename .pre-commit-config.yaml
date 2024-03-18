@@ -47,7 +47,7 @@ repos:
           - yaml
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.2
+    rev: v0.3.3
     hooks:
       - id: ruff
       - id: ruff-format
@@ -64,9 +64,9 @@ repos:
       - id: mypy
         additional_dependencies:
           # renovate: datasource=pypi depName=types-pyyaml
-          - types-pyyaml==6.0.12.12
+          - types-pyyaml==6.0.12.20240311
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.18.0
+    rev: v3.18.4
     hooks:
       - id: commitizen
