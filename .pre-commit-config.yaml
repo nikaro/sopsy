@@ -47,7 +47,7 @@ repos:
           - yaml
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.3
+    rev: v0.3.4
     hooks:
       - id: ruff
       - id: ruff-format
@@ -67,6 +67,6 @@ repos:
           - types-pyyaml==6.0.12.20240311
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.18.4
+    rev: v3.20.0
     hooks:
       - id: commitizen
