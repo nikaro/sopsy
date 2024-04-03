@@ -12,20 +12,20 @@ exceptiongroup==1.2.0
     # via pytest
 iniconfig==2.0.0
     # via pytest
-mypy==1.8.0
+mypy==1.9.0
 mypy-extensions==1.0.0
     # via mypy
-packaging==23.2
+packaging==24.0
     # via pytest
 pluggy==1.4.0
     # via pytest
-pytest==8.0.1
+pytest==8.1.1
 pyyaml==6.0.1
     # via sopsy
-ruff==0.2.2
+ruff==0.3.5
 tomli==2.0.1
     # via mypy
     # via pytest
-types-pyyaml==6.0.12.12
-typing-extensions==4.9.0
+types-pyyaml==6.0.12.20240311
+typing-extensions==4.10.0
     # via mypy
