@@ -7,5 +7,6 @@ wheels/
 *.egg-info
 
 .envrc
-.venv
+.venv/
 .python-version
+.sl/
