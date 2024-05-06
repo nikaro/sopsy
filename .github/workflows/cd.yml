@@ -10,7 +10,7 @@ on:
 
 env:
   # renovate: datasource=pypi depName=commitizen
-  COMMITIZEN_VERSION: 3.24.0
+  COMMITIZEN_VERSION: 3.25.0
   # renovate: datasource=github-releases depName=mitsuhiko/rye
   RYE_VERSION: 0.33.0
 
