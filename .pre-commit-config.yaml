@@ -67,6 +67,6 @@ repos:
           - types-pyyaml==6.0.12.20240311
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.25.0
+    rev: v3.26.0
     hooks:
       - id: commitizen
