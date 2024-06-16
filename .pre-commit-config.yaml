@@ -22,7 +22,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.28.4
+    rev: 0.28.5
     hooks:
       - id: check-github-actions
       - id: check-github-workflows
@@ -47,7 +47,7 @@ repos:
           - yaml
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.8
+    rev: v0.4.9
     hooks:
       - id: ruff
       - id: ruff-format

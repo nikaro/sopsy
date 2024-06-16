@@ -21,7 +21,7 @@ jobs:
     environment: release
     steps:
       - name: Checkout
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
         with:
           fetch-depth: 0
 
@@ -47,12 +47,12 @@ jobs:
           tag: ${{ steps.cz.outputs.version }}
 
       - name: Setup Rye
-        uses: nikaro/actions/setup-rye@778344cb9ff71fc2237011ac731622e1da3a109a # 1.6.4
+        uses: nikaro/actions/setup-rye@85fba2827584648c6e8423feb04fc111cffb0f66 # 1.6.5
 
       - name: Build package
         run: rye build
 
       - name: Publish package to PyPI
-        uses: pypa/gh-action-pypi-publish@81e9d935c883d0b210363ab89cf05f3894778450 # v1.8.14
+        uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
         with:
           skip-existing: true

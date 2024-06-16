@@ -15,10 +15,10 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Run pre-commit
-        uses: nikaro/actions/pre-commit@778344cb9ff71fc2237011ac731622e1da3a109a # 1.6.4
+        uses: nikaro/actions/pre-commit@85fba2827584648c6e8423feb04fc111cffb0f66 # 1.6.5
         with:
           python-version: 3.x
 
@@ -29,10 +29,10 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4.1.6
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Setup Rye
-        uses: nikaro/actions/setup-rye@778344cb9ff71fc2237011ac731622e1da3a109a # 1.6.4
+        uses: nikaro/actions/setup-rye@85fba2827584648c6e8423feb04fc111cffb0f66 # 1.6.5
 
       - name: Install dependencies
         run: rye sync --all-features
