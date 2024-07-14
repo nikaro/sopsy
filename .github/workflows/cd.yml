@@ -1,3 +1,4 @@
+---
 name: CD
 
 on:
@@ -33,26 +34,30 @@ jobs:
           dry_run: true
 
       - name: Bump
-        id: cz
+        if: env.PREVIOUS_REVISION != env.REVISION
         uses: commitizen-tools/commitizen-action@1f11eb222996406681d2bfa1eb3d997eca46557c # 0.21.0
         with:
           github_token: ${{ github.token }}
           changelog_increment_filename: _changelog.md
 
       - name: Release
+        if: env.PREVIOUS_REVISION != env.REVISION
         uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
         with:
           bodyFile: _changelog.md
           skipIfReleaseExists: true
-          tag: ${{ steps.cz.outputs.version }}
+          tag: ${{ env.REVISION }}
 
       - name: Setup Rye
+        if: env.PREVIOUS_REVISION != env.REVISION
         uses: nikaro/actions/setup-rye@09f4303c25301bd9306525d3989a9f0ed938ad2f # 1.6.6
 
       - name: Build package
+        if: env.PREVIOUS_REVISION != env.REVISION
         run: rye build
 
       - name: Publish package to PyPI
+        if: env.PREVIOUS_REVISION != env.REVISION
         uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
         with:
           skip-existing: true
