@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Run pre-commit
-        uses: nikaro/actions/pre-commit@09f4303c25301bd9306525d3989a9f0ed938ad2f # 1.6.6
+        uses: nikaro/actions/pre-commit@ed5ef534b365f534b5b3907122ff707cb36a3503 # 1.6.7
         with:
           python-version: 3.x
 
@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       - name: Setup Rye
-        uses: nikaro/actions/setup-rye@09f4303c25301bd9306525d3989a9f0ed938ad2f # 1.6.6
+        uses: nikaro/actions/setup-rye@ed5ef534b365f534b5b3907122ff707cb36a3503 # 1.6.7
 
       - name: Install dependencies
         run: rye sync --all-features
