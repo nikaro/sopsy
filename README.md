@@ -4,6 +4,8 @@ SOPSy is a simple Python wrapper arround [SOPS](https://github.com/getsops/sops)
 
 ## Installation
 
+SOPS binary should be installed and found in `$PATH`.
+
 ```sh
 pip install sopsy
 ```
