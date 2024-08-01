@@ -50,7 +50,7 @@ jobs:
 
       - name: Setup Rye
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: nikaro/actions/setup-rye@ed5ef534b365f534b5b3907122ff707cb36a3503 # 1.6.7
+        uses: nikaro/actions/setup-rye@865a24d94f9ec89514bd8e043d2d13b8461cb20b # 1.6.8
 
       - name: Build package
         if: env.PREVIOUS_REVISION != env.REVISION
