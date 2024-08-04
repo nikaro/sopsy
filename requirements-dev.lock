@@ -6,26 +6,28 @@
 #   features: []
 #   all-features: true
 #   with-sources: false
+#   generate-hashes: false
+#   universal: false
 
 -e file:.
-exceptiongroup==1.2.0
+exceptiongroup==1.2.2
     # via pytest
 iniconfig==2.0.0
     # via pytest
-mypy==1.9.0
+mypy==1.11.1
 mypy-extensions==1.0.0
     # via mypy
-packaging==24.0
+packaging==24.1
     # via pytest
-pluggy==1.4.0
+pluggy==1.5.0
     # via pytest
-pytest==8.1.1
+pytest==8.3.2
 pyyaml==6.0.1
     # via sopsy
-ruff==0.3.5
+ruff==0.5.6
 tomli==2.0.1
     # via mypy
     # via pytest
-types-pyyaml==6.0.12.20240311
-typing-extensions==4.10.0
+types-pyyaml==6.0.12.20240724
+typing-extensions==4.12.2
     # via mypy
