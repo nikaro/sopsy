@@ -1,8 +1,9 @@
----
 name: CI
 
 on:
   pull_request:
+    branches: [main]
+  push:
     branches: [main]
   workflow_call:
   workflow_dispatch:
@@ -10,44 +11,55 @@ on:
 jobs:
   lint:
     name: Lint
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@v4
 
-      - name: Run pre-commit
-        uses: nikaro/actions/pre-commit@865a24d94f9ec89514bd8e043d2d13b8461cb20b # 1.6.8
-        with:
-          python-version: 3.x
+      - name: Install tools
+        run: |
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          /home/linuxbrew/.linuxbrew/bin/brew install \
+            actionlint \
+            check-jsonschema \
+            ruff \
+            rye \
+            yamlfmt \
+            yamllint \
+
+      - name: Lint
+        run: make lint
 
   test:
     name: Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@v4
 
-      - name: Setup Rye
-        uses: nikaro/actions/setup-rye@865a24d94f9ec89514bd8e043d2d13b8461cb20b # 1.6.8
+      - name: Install tools
+        run: |
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          /home/linuxbrew/.linuxbrew/bin/brew install \
+            rye \
 
       - name: Install dependencies
-        run: rye sync --all-features
+        run: make sync
 
       - name: Test
-        run: rye run test
+        run: make test
 
   check:
     name: Check
     permissions: {}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     needs: [lint, test]
     if: always()
     steps:
       - name: Ensure no jobs failed
-        uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
-        with:
-          jobs: ${{ toJSON(needs) }}
+        run: |-
+          [ "${{ !contains(needs.*.result, 'failure') }}" = "true" ] || exit 1
