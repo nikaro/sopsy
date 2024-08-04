@@ -1,4 +1,3 @@
----
 name: CD
 
 on:
@@ -15,19 +14,19 @@ jobs:
   release:
     name: Release
     needs: [ci]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
     environment: release
     steps:
       - name: Checkout
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+        uses: actions/checkout@main
         with:
           fetch-depth: 0
 
       - name: Dry run
-        uses: commitizen-tools/commitizen-action@1f11eb222996406681d2bfa1eb3d997eca46557c # 0.21.0
+        uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ github.token }}
           changelog_increment_filename: _changelog.md
@@ -35,14 +34,14 @@ jobs:
 
       - name: Bump
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: commitizen-tools/commitizen-action@1f11eb222996406681d2bfa1eb3d997eca46557c # 0.21.0
+        uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ github.token }}
           changelog_increment_filename: _changelog.md
 
       - name: Release
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
+        uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5  # v1.14.0
         with:
           bodyFile: _changelog.md
           skipIfReleaseExists: true
@@ -50,14 +49,14 @@ jobs:
 
       - name: Setup Rye
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: nikaro/actions/setup-rye@865a24d94f9ec89514bd8e043d2d13b8461cb20b # 1.6.8
+        uses: nikaro/actions/setup-rye@main
 
       - name: Build package
         if: env.PREVIOUS_REVISION != env.REVISION
-        run: rye build
+        run: make build
 
       - name: Publish package to PyPI
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0 # v1.9.0
+        uses: pypa/gh-action-pypi-publish@ec4db0b4ddc65acdf4bff5fa45ac92d78b56bdf0  # v1.9.0
         with:
           skip-existing: true
