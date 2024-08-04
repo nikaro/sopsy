@@ -10,13 +10,13 @@
 #   universal: false
 
 -e file:.
+basedpyright==1.15.1
 exceptiongroup==1.2.2
     # via pytest
 iniconfig==2.0.0
     # via pytest
-mypy==1.11.1
-mypy-extensions==1.0.0
-    # via mypy
+nodejs-wheel-binaries==20.16.0
+    # via basedpyright
 packaging==24.1
     # via pytest
 pluggy==1.5.0
@@ -24,10 +24,6 @@ pluggy==1.5.0
 pytest==8.3.2
 pyyaml==6.0.1
     # via sopsy
-ruff==0.5.6
 tomli==2.0.1
-    # via mypy
     # via pytest
-types-pyyaml==6.0.12.20240724
 typing-extensions==4.12.2
-    # via mypy

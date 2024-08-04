@@ -68,7 +68,7 @@ class Sops:
     ) -> None:
         """Initialize SOPS object."""
         self.file = Path(file).resolve(strict=True)
-        self.global_args = []
+        self.global_args: list[str] = []
         if config:
             config = str(Path(config).resolve(strict=True))
             self.global_args.extend(["--config", config])
@@ -91,7 +91,7 @@ class Sops:
 
     def _to_dict(self: Self, data: bytes) -> dict[str, Any]:
         """Parse data and return a dict from it."""
-        out = {}
+        out: dict[str, Any] = {}
         err: Exception | None = None
 
         try:
@@ -101,8 +101,8 @@ class Sops:
 
         if _has_yaml:
             try:
-                out = yaml.safe_load(data)
-            except yaml.YAMLError as yaml_err:
+                out = yaml.safe_load(data)  # pyright: ignore[reportPossiblyUnboundVariable]
+            except yaml.YAMLError as yaml_err:  # pyright: ignore[reportPossiblyUnboundVariable]
                 err = yaml_err
 
         if not out:

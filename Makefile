@@ -30,6 +30,7 @@ lint: ## Run linters
 	# Python
 	@rye fmt --check
 	@rye lint
+	@rye run type-check
 
 test: ## Run project test
 	rye test
