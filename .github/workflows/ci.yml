@@ -8,6 +8,9 @@ on:
   workflow_call:
   workflow_dispatch:
 
+env:
+  TASK_X_REMOTE_TASKFILES: 1
+
 jobs:
   lint:
     name: Lint
@@ -16,7 +19,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@main
 
       - name: Install tools
         run: |
@@ -24,13 +27,18 @@ jobs:
           /home/linuxbrew/.linuxbrew/bin/brew install \
             actionlint \
             check-jsonschema \
-            ruff \
+            fd \
+            go-task \
+            jq \
+            prettier \
             rye \
+            shellcheck \
+            shfmt \
             yamlfmt \
             yamllint \
 
       - name: Lint
-        run: make lint
+        run: task lint --yes
 
   test:
     name: Test
@@ -39,19 +47,23 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@main
 
       - name: Install tools
         run: |
           echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
           /home/linuxbrew/.linuxbrew/bin/brew install \
+            go-task \
             rye \
 
       - name: Install dependencies
-        run: make sync
+        run: task sync --yes
 
       - name: Test
-        run: make test
+        run: task test --yes
+
+      - name: Test
+        run: task build --yes
 
   check:
     name: Check

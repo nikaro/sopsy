@@ -1,0 +1,100 @@
+version: '3'
+
+set: [errexit, nounset, pipefail]
+shopt: [globstar]
+
+includes:
+  lint:
+    taskfile: https://github.com/nikaro/meta/raw/main/taskfiles/lint.yml
+    internal: true
+  format:
+    taskfile: https://github.com/nikaro/meta/raw/main/taskfiles/format.yml
+    internal: true
+
+tasks:
+  init:
+    desc: Initialize repositry
+    cmds:
+      - git config core.hooksPath .githooks
+      - git config commit.template .gitmessage
+
+  lock:
+    desc: Generate lockfile
+    sources:
+      - ./pyproject.toml
+    generates:
+      - ./requirements.lock
+      - ./requirements-dev.lock
+    cmd: rye lock --all-features
+
+  lock:update:
+    desc: Update packages to their latest version
+    cmd: rye lock --all-features --update-all
+
+  sync:
+    desc: Synchronize virtualenv with lockfile
+    deps: [lock]
+    sources:
+      - ./requirements.lock
+      - ./requirements-dev.lock
+    cmd: rye sync --all-features --no-lock || rye sync --all-features --no-lock --force
+
+  lint:
+    desc: Run linters
+    cmds:
+      - task: lint:default
+      - task: lint:python
+
+  lint:python:
+    desc: Lint Python code
+    deps: [sync]
+    sources:
+      - ./src/**/*.py
+    cmds:
+      - rye fmt --check
+      - rye lint
+      - rye run type-check
+
+  format:
+    desc: Run formatters
+    cmds:
+      - task: format:default
+      - task: format:python
+
+  format:python:
+    desc: Format Python code
+    deps: [sync]
+    sources:
+      - ./src/**/*.py
+      - ./tests/**/*.py
+    cmds:
+      - rye fmt
+
+  test:
+    desc: Run tests
+    deps: [sync]
+    sources:
+      - ./src/**/*.py
+      - ./tests/**/*.py
+    cmd: rye test
+
+  build:
+    desc: Build project
+    deps: [sync]
+    sources:
+      - ./src/**/*.py
+      - ./tests/**/*.py
+      - ./pyproject.toml
+      - ./requirements.lock
+    generates:
+      - ./dist/*.whl
+      - ./dist/*.tar.gz
+    cmd: rye build
+
+  clean:
+    desc: Cleanup workspace
+    cmds:
+      - rm -rf ./dist/
+      - rm -rf ./.ruff_cache/
+      - rm -rf ./.pytest_cache/
+      - fd --type directory --no-ignore __pycache__ | xargs --no-run-if-empty rm -rf

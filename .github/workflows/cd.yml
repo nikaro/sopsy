@@ -21,7 +21,7 @@ jobs:
     environment: release
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@main
         with:
           fetch-depth: 0
 
@@ -47,13 +47,16 @@ jobs:
           skipIfReleaseExists: true
           tag: ${{ env.REVISION }}
 
-      - name: Setup Rye
-        if: env.PREVIOUS_REVISION != env.REVISION
-        uses: nikaro/actions/setup-rye@main
+      - name: Install tools
+        run: |
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          /home/linuxbrew/.linuxbrew/bin/brew install \
+            go-task \
+            rye \
 
       - name: Build package
         if: env.PREVIOUS_REVISION != env.REVISION
-        run: make build
+        run: task build --yes
 
       - name: Publish package to PyPI
         if: env.PREVIOUS_REVISION != env.REVISION

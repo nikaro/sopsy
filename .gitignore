@@ -10,3 +10,4 @@ wheels/
 .venv/
 .python-version
 .sl/
+.task/
