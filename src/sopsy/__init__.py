@@ -57,13 +57,13 @@ class Sops:
 
     def __init__(
         self: Self,
-        file: str,
+        file: str | Path,
         *,
-        config: str | None = None,
+        config: str | Path | None = None,
         extract: str | None = None,
         in_place: bool | None = None,
         input_type: SopsyInOutType | str | None = None,
-        output: str | None = None,
+        output: str | Path | None = None,
         output_type: SopsyInOutType | str | None = SopsyInOutType.JSON,
     ) -> None:
         """Initialize SOPS object."""
@@ -71,7 +71,7 @@ class Sops:
         self.global_args: list[str] = []
         if config:
             config = str(Path(config).resolve(strict=True))
-            self.global_args.extend(["--config", config])
+            self.global_args.extend(["--config", str(config)])
         if extract:
             self.global_args.extend(["--extract", extract])
         if in_place:
@@ -79,7 +79,7 @@ class Sops:
         if input_type:
             self.global_args.extend(["--input-type", str(input_type)])
         if output:
-            self.global_args.extend(["--output", output])
+            self.global_args.extend(["--output", str(output)])
         if output_type:
             self.global_args.extend(["--output-type", str(output_type)])
         if not shutil.which("sops"):

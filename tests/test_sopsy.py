@@ -24,7 +24,7 @@ def test_to_dict_from_json(monkeypatch: pytest.MonkeyPatch) -> None:
     """Test _to_dict function with JSON input."""
     monkeypatch.setattr(shutil, "which", lambda _: "/usr/bin/sops")
     monkeypatch.setattr(Path, "resolve", _mock_path_resolve)
-    result = sopsy.Sops("secrets.json")._to_dict(b'{"hello":"world"}')
+    result = sopsy.Sops(Path("secrets.json"))._to_dict(b'{"hello":"world"}')
     assert result == {"hello": "world"}
 
 
