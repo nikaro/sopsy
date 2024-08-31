@@ -17,7 +17,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-license = { file = "LICENSE" }
+license = { text = "GPL-3.0-or-later" }
 keywords = ["sops"]
 
 [project.optional-dependencies]
@@ -35,6 +35,8 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
+universal = true
+generate-hashes = true
 dev-dependencies = [
   "pytest>=7.4.3",
   "basedpyright>=1.15.1",
