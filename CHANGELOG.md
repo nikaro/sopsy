@@ -1,3 +1,9 @@
+## 0.2.4 (2024-09-01)
+
+### Fix
+
+- **typing**: allow to pass Path objects
+
 ## 0.2.3 (2023-12-15)
 
 ### Fix
