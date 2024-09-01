@@ -54,3 +54,5 @@ jobs:
       - name: Publish package to PyPI
         if: env.PREVIOUS_REVISION != env.REVISION
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          attestations: true
