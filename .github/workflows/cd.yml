@@ -5,6 +5,9 @@ on:
     - cron: "0 0 * * 3"
   workflow_dispatch:
 
+env:
+  TASK_X_REMOTE_TASKFILES: 1
+
 jobs:
   ci:
     name: CI
@@ -21,42 +24,44 @@ jobs:
     environment: release
     steps:
       - name: Checkout
-        uses: actions/checkout@main
-        with:
-          fetch-depth: 0
-
-      - name: Dry run
-        uses: commitizen-tools/commitizen-action@master
-        with:
-          github_token: ${{ github.token }}
-          changelog_increment_filename: _changelog.md
-          dry_run: true
-
-      - name: Bump
-        if: env.PREVIOUS_REVISION != env.REVISION
-        uses: commitizen-tools/commitizen-action@master
-        with:
-          github_token: ${{ github.token }}
-          changelog_increment_filename: _changelog.md
-
-      - name: Release
-        if: env.PREVIOUS_REVISION != env.REVISION
-        uses: ncipollo/release-action@v1
-        with:
-          bodyFile: _changelog.md
-          skipIfReleaseExists: true
-          tag: ${{ env.REVISION }}
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |-
+          gh repo clone ${{ github.repository }} ${{ github.workspace }} -- --branch "$BRANCH"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
 
       - name: Install tools
         run: |
           echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
           /home/linuxbrew/.linuxbrew/bin/brew install \
+            commitizen \
             go-task \
             rye \
+
+      - name: Bump
+        run: |-
+          echo "PREVIOUS_REVISION=$(cz version --project)" >>"$GITHUB_ENV"
+          task bump --yes
+          echo "REVISION=$(cz version --project)" >>"$GITHUB_ENV"
+
+      - name: Push tags
+        if: env.PREVIOUS_REVISION != env.REVISION
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          REMOTE_REPO: https://${{ github.actor }}:${{ github.token }}@github.com/${{ github.repository }}.git
+        run: git push "$REMOTE_REPO" "HEAD:${BRANCH}" --tags
 
       - name: Build package
         if: env.PREVIOUS_REVISION != env.REVISION
         run: task build --yes
+
+      - name: Release
+        if: env.PREVIOUS_REVISION != env.REVISION
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: task release --yes
 
       - name: Publish package to PyPI
         if: env.PREVIOUS_REVISION != env.REVISION

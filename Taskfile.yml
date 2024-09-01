@@ -78,6 +78,17 @@ tasks:
       - ./tests/**/*.py
     cmd: rye test
 
+  bump:
+    desc: Bump version
+    vars:
+      RC_IGNORE: 3,21
+    status:
+      - test -f ./_changelog.md
+      - git show --name-only | grep -q CHANGELOG.md
+    preconditions:
+      - cz --no-raise {{.RC_IGNORE}} bump --dry-run  --check-consistency --changelog --changelog-to-stdout
+    cmd: cz --no-raise {{.RC_IGNORE}} bump --changelog --changelog-to-stdout > ./_changelog.md
+
   build:
     desc: Build project
     deps: [sync]
@@ -90,6 +101,46 @@ tasks:
       - ./dist/*.whl
       - ./dist/*.tar.gz
     cmd: rye build
+
+  release:
+    desc: Publish GitHub release
+    deps: [build]
+    env:
+      LATEST_RELEASE:
+        sh: gh release list --limit 1 --json tagName --jq '.[].tagName'
+      REVISION:
+        sh: echo ${REVISION:-$(git describe --tags --abbrev=0)}
+    status:
+      - test "$LATEST_RELEASE" = "$REVISION"
+    preconditions:
+      - test -n "$GH_TOKEN"
+      - test -n "$REVISION"
+    cmds:
+      - gh release create --notes-file ./_changelog.md --verify-tag "$REVISION" ./dist/*
+      - defer: rm -rf ./_changelog.md
+
+  publish:
+    desc: Upload package on PyPI
+    deps: [build]
+    env:
+      PGP_ID:
+        sh: echo ${PGP_ID:-47F86D99}
+      PYPI_USER:
+        sh: echo ${PYPI_USER:-nka}
+    preconditions:
+      - test -n "$PGP_ID"
+      - test -n "$PYPI_USER"
+      - test -n "$PYPI_TOKEN"
+    sources:
+      - ./dist/*.whl
+      - ./dist/*.tar.gz
+    cmd: |-
+      rye publish \
+        --username "$PYPI_USER "\
+        --token "$PYPI_TOKEN" \
+        --sign --identity "$PGP_ID" \
+        --skip-existing \
+        --yes
 
   clean:
     desc: Cleanup workspace
