@@ -86,7 +86,7 @@ tasks:
       - test -f ./_changelog.md
       - git show --name-only | grep -q CHANGELOG.md
     preconditions:
-      - cz --no-raise {{.RC_IGNORE}} bump --dry-run  --check-consistency --changelog --changelog-to-stdout
+      - cz --no-raise {{.RC_IGNORE}} bump --dry-run --check-consistency --changelog --changelog-to-stdout
     cmd: cz --no-raise {{.RC_IGNORE}} bump --changelog --changelog-to-stdout > ./_changelog.md
 
   build:
@@ -104,7 +104,7 @@ tasks:
 
   release:
     desc: Publish GitHub release
-    deps: [build]
+    deps: [bump, build]
     env:
       LATEST_RELEASE:
         sh: gh release list --limit 1 --json tagName --jq '.[].tagName'
