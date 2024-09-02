@@ -129,7 +129,9 @@ class Sops:
 
     @overload
     def decrypt(
-        self: Self, *, to_dict: Literal[True] = True
+        self: Self,
+        *,
+        to_dict: Literal[True] = True,
     ) -> dict[str, Any] | None: ...
 
     @overload
@@ -142,7 +144,9 @@ class Sops:
 
     @overload
     def encrypt(
-        self: Self, *, to_dict: Literal[True] = True
+        self: Self,
+        *,
+        to_dict: Literal[True] = True,
     ) -> dict[str, Any] | None: ...
 
     @overload
@@ -167,7 +171,9 @@ class Sops:
 
     @overload
     def rotate(
-        self: Self, *, to_dict: Literal[True] = True
+        self: Self,
+        *,
+        to_dict: Literal[True] = True,
     ) -> dict[str, Any] | None: ...
 
     @overload

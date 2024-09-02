@@ -49,11 +49,15 @@ tasks:
     desc: Lint Python code
     deps: [sync]
     sources:
+      - ./pyproject.toml
+      - ./requirements.lock
+      - ./requirements-dev.lock
       - ./src/**/*.py
+      - ./tests/**/*.py
     cmds:
-      - rye fmt --check
-      - rye lint
-      - rye run type-check
+      - rye run ruff format --check
+      - rye run ruff check
+      - rye run basedpyright ./src/
 
   format:
     desc: Run formatters
@@ -65,15 +69,21 @@ tasks:
     desc: Format Python code
     deps: [sync]
     sources:
+      - ./pyproject.toml
+      - ./requirements.lock
+      - ./requirements-dev.lock
       - ./src/**/*.py
       - ./tests/**/*.py
     cmds:
-      - rye fmt
+      - rye run ruff format
 
   test:
     desc: Run tests
     deps: [sync]
     sources:
+      - ./pyproject.toml
+      - ./requirements.lock
+      - ./requirements-dev.lock
       - ./src/**/*.py
       - ./tests/**/*.py
     cmd: rye test

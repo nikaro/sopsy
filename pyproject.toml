@@ -38,8 +38,9 @@ managed = true
 universal = true
 generate-hashes = true
 dev-dependencies = [
-  "pytest>=7.4.3",
   "basedpyright>=1.15.1",
+  "pytest>=7.4.3",
+  "ruff>=0.6.3",
   "typing-extensions>=4.12.2",
 ]
 
@@ -49,12 +50,17 @@ type-check = "basedpyright ./src/"
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.lint.ruff]
+[tool.ruff.lint]
 select = ["ALL"]
-ignore = ["COM812", "D203", "D212"]
 
 [tool.ruff.lint.isort]
 force-single-line = true
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN401", "INP001", "S101", "SLF001"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
 
 [tool.ruff.lint.pylint]
 max-args = 15
