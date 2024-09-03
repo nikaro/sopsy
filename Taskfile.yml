@@ -57,6 +57,7 @@ tasks:
     cmds:
       - rye run ruff format --check
       - rye run ruff check
+      - rye run mypy ./src/
       - rye run basedpyright ./src/
 
   format:
@@ -86,7 +87,7 @@ tasks:
       - ./requirements-dev.lock
       - ./src/**/*.py
       - ./tests/**/*.py
-    cmd: rye test
+    cmd: rye run pytest --cov-report=term-missing --cov=sopsy ./tests/
 
   bump:
     desc: Bump version
