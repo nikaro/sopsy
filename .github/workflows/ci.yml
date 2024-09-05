@@ -62,7 +62,7 @@ jobs:
       - name: Test
         run: task test --yes
 
-      - name: Test
+      - name: Build
         run: task build --yes
 
   check:
