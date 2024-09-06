@@ -3,7 +3,7 @@ name = "sopsy"
 version = "0.2.4"
 description = "SOPS Python wrapper library"
 authors = [{ name = "Nicolas Karolak", email = "nicolas@karolak.fr" }]
-dependencies = []
+dependencies = ["pyyaml>=6.0.1"]
 readme = "README.md"
 requires-python = ">= 3.8"
 classifiers = [
@@ -19,9 +19,6 @@ classifiers = [
 ]
 license = { text = "GPL-3.0-or-later" }
 keywords = ["sops"]
-
-[project.optional-dependencies]
-yaml = ["pyyaml>=6.0.1"]
 
 [project.urls]
 Homepage = "https://github.com/nikaro/sopsy"
