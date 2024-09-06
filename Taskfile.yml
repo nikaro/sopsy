@@ -157,8 +157,12 @@ tasks:
     desc: Generate documentation
     deps: [sync]
     sources:
-      - exclude: docs/source/apidocs/**
-      - docs/source/**
+      - exclude: ./docs/source/apidocs/**
+      - ./docs/source/**
+      - ./pyproject.toml
+      - ./requirements.lock
+      - ./requirements-dev.lock
+      - ./src/**/*.py
     cmd: rye run sphinx-build -M html ./docs/source/ ./docs/build/
 
   clean:
