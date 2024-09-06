@@ -152,6 +152,14 @@ tasks:
         --skip-existing \
         --yes
 
+  gendoc:
+    desc: Generate documentation
+    deps: [sync]
+    sources:
+      - exclude: docs/source/apidocs/**
+      - docs/source/**
+    cmd: rye run sphinx-build -M html ./docs/source/ ./docs/build/
+
   clean:
     desc: Cleanup workspace
     cmds:
@@ -159,3 +167,5 @@ tasks:
       - rm -rf ./.ruff_cache/
       - rm -rf ./.pytest_cache/
       - fd --type directory --no-ignore __pycache__ | xargs --no-run-if-empty rm -rf
+      - rm -rf ./docs/build/*
+      - rm -rf ./docs/source/apidocs/*

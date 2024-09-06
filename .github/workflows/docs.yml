@@ -1,0 +1,52 @@
+name: Docs
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+env:
+  TASK_X_REMOTE_TASKFILES: 1
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |-
+          gh repo clone ${{ github.repository }} ${{ github.workspace }} -- --branch "$BRANCH"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+      - name: Install tools
+        run: |
+          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
+          /home/linuxbrew/.linuxbrew/bin/brew install \
+            go-task \
+            rye \
+      - name: Build package
+        run: task gendoc --yes
+      - name: Setup Pages
+        uses: actions/configure-pages@main
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@main
+        with:
+          path: './docs/build/html'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@main
