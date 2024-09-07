@@ -34,6 +34,7 @@ theme:
 nav:
   - index.md
   - reference.md
+  - changelog.md
   - coverage.md
 
 plugins:
@@ -68,3 +69,6 @@ plugins:
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences
+  - pymdownx.snippets:
+      base_path: [!relative $config_dir]
+      check_paths: true
