@@ -21,21 +21,19 @@ license = { text = "GPL-3.0-or-later" }
 keywords = ["sops"]
 
 [project.urls]
-Homepage = "https://github.com/nikaro/sopsy"
+Homepage = "https://sopsy.nikaro.net"
 Repository = "https://github.com/nikaro/sopsy"
 Issues = "https://github.com/nikaro/sopsy/issues"
-Changelog = "https://github.com/nikaro/sopsy/blob/main/CHANGELOG.md"
+Changelog = "https://sopsy.nikaro.net/changelog/"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.rye]
-managed = true
-universal = true
-generate-hashes = true
+[tool.uv]
 dev-dependencies = [
   "basedpyright>=1.15.1",
+  "black>=24.8.0",
   "mkdocs-coverage>=1.1.0",
   "mkdocs-material>=9.5.34",
   "mkdocstrings[python]>=0.26.1",
@@ -43,13 +41,10 @@ dev-dependencies = [
   "pytest-cov>=5.0.0",
   "pytest>=7.4.3",
   "ruff>=0.6.3",
+  "twine>=5.1.1",
   "types-pyyaml>=6.0.12.20240808",
   "typing-extensions>=4.12.2",
-  "black>=24.8.0",
 ]
-
-[tool.rye.scripts]
-type-check = "basedpyright ./src/"
 
 [tool.hatch.metadata]
 allow-direct-references = true

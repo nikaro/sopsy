@@ -25,11 +25,11 @@ tasks:
     generates:
       - ./requirements.lock
       - ./requirements-dev.lock
-    cmd: rye lock --all-features
+    cmd: uv lock --frozen
 
   lock:update:
     desc: Update packages to their latest version
-    cmd: rye lock --all-features --update-all
+    cmd: uv lock --upgrade
 
   sync:
     desc: Synchronize virtualenv with lockfile
@@ -37,7 +37,7 @@ tasks:
     sources:
       - ./requirements.lock
       - ./requirements-dev.lock
-    cmd: rye sync --all-features --no-lock || rye sync --all-features --no-lock --force
+    cmd: uv sync --frozen
 
   lint:
     desc: Run linters
@@ -55,10 +55,10 @@ tasks:
       - ./src/**/*.py
       - ./tests/**/*.py
     cmds:
-      - rye run ruff format --check
-      - rye run ruff check
-      - rye run basedpyright ./src/
-      - cmd: rye run mypy ./src/
+      - uv run ruff format --check
+      - uv run ruff check
+      - uv run basedpyright ./src/
+      - cmd: uv run mypy ./src/
         ignore_error: true
 
   format:
@@ -77,7 +77,7 @@ tasks:
       - ./src/**/*.py
       - ./tests/**/*.py
     cmds:
-      - rye run ruff format
+      - uv run ruff format
 
   test:
     desc: Run tests
@@ -88,7 +88,7 @@ tasks:
       - ./requirements-dev.lock
       - ./src/**/*.py
       - ./tests/**/*.py
-    cmd: rye run pytest --cov-report=term-missing --cov-report=html --cov=sopsy ./tests/
+    cmd: uv run pytest --cov-report=term-missing --cov-report=html --cov=sopsy ./tests/
 
   bump:
     desc: Bump version
@@ -112,7 +112,7 @@ tasks:
     generates:
       - ./dist/*.whl
       - ./dist/*.tar.gz
-    cmd: rye build
+    cmd: uv build
 
   release:
     desc: Publish GitHub release
@@ -147,12 +147,12 @@ tasks:
       - ./dist/*.whl
       - ./dist/*.tar.gz
     cmd: |-
-      rye publish \
+      twine upload \
         --username "$PYPI_USER "\
-        --token "$PYPI_TOKEN" \
+        --password "$PYPI_TOKEN" \
         --sign --identity "$PGP_ID" \
         --skip-existing \
-        --yes
+        --non-interactive
 
   gendoc:
     desc: Generate documentation
@@ -164,7 +164,7 @@ tasks:
       - ./requirements.lock
       - ./requirements-dev.lock
       - ./src/**/*.py
-    cmd: rye run mkdocs build
+    cmd: uv run mkdocs build
 
   clean:
     desc: Cleanup workspace
