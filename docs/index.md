@@ -28,7 +28,7 @@ from sopsy import Sops
 sops = Sops("secrets.yml")
 
 my_secret_key = sops.get("my_secret_key")
-print(f"signle secret: {my_secret_key}")
+print(f"single secret: {my_secret_key}")
 
 secrets = sops.decrypt()
 print(f"all my secrets: {secrets}")

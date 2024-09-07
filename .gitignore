@@ -3,6 +3,7 @@ __pycache__/
 *.py[oc]
 build/
 dist/
+htmlcov/
 wheels/
 *.egg-info
 
@@ -12,5 +13,4 @@ wheels/
 .python-version
 .sl/
 .task/
-docs/build/
-docs/source/apidocs/
+site/
