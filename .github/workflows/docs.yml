@@ -38,7 +38,7 @@ jobs:
           echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
           /home/linuxbrew/.linuxbrew/bin/brew install \
             go-task \
-            rye \
+            uv \
       - name: Build package
         run: task gendoc --yes
       - name: Setup Pages

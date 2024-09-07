@@ -38,7 +38,7 @@ jobs:
           /home/linuxbrew/.linuxbrew/bin/brew install \
             commitizen \
             go-task \
-            rye \
+            uv \
 
       - name: Bump
         run: |-

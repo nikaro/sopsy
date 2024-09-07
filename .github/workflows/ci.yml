@@ -31,9 +31,9 @@ jobs:
             go-task \
             jq \
             prettier \
-            rye \
             shellcheck \
             shfmt \
+            uv \
             yamlfmt \
             yamllint \
 
@@ -54,7 +54,7 @@ jobs:
           echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
           /home/linuxbrew/.linuxbrew/bin/brew install \
             go-task \
-            rye \
+            uv \
 
       - name: Install dependencies
         run: task sync --yes
