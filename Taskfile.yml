@@ -156,7 +156,7 @@ tasks:
 
   gendoc:
     desc: Generate documentation
-    deps: [sync, test]
+    deps: [test]
     sources:
       - ./docs/**
       - ./mkdocs.yml
