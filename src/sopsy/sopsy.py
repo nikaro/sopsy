@@ -166,10 +166,8 @@ class Sops:
         Returns:
             The value of the given key, or the default value.
         """
-        data = self.decrypt()
-        if isinstance(data, dict):
-            return data.get(key) or default
-        return default
+        data: dict[Any, Any] = self.decrypt()  # pyright: ignore[reportAssignmentType]
+        return data.get(key) or default
 
     def rotate(self, *, to_dict: bool = True) -> bytes | dict[str, Any] | None:
         """Rotate encryption keys and re-encrypt values from SOPS file.

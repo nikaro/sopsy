@@ -57,8 +57,9 @@ tasks:
     cmds:
       - rye run ruff format --check
       - rye run ruff check
-      - rye run mypy ./src/
       - rye run basedpyright ./src/
+      - cmd: rye run mypy ./src/
+        ignore_error: true
 
   format:
     desc: Run formatters

@@ -179,6 +179,89 @@ def test_sops_init(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     assert s.file == sops_file
 
 
+def test_sops_init_config(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with config arg."""
+    sops_config = tmp_path / "config.yml"
+    _ = sops_config.write_text("config: value")
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    monkeypatch.setattr(shutil, "which", _return_sops_path)
+    _ = sopsy.Sops(
+        sops_file,
+        config=str(sops_config),
+    )
+
+
+def test_sops_init_extract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with extract arg."""
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    monkeypatch.setattr(shutil, "which", _return_sops_path)
+    s = sopsy.Sops(
+        sops_file,
+        extract='["hello"]',
+    )
+    assert "--extract" in s.global_args
+
+
+def test_sops_init_inplace(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with in_place arg."""
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    monkeypatch.setattr(shutil, "which", _return_sops_path)
+    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    s = sopsy.Sops(
+        sops_file,
+        in_place=True,
+    )
+    d = s.decrypt()
+    assert "--in-place" in s.global_args
+    assert d is None
+
+
+def test_sops_init_inputtype(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with input_type arg."""
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    monkeypatch.setattr(shutil, "which", _return_sops_path)
+    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    s = sopsy.Sops(
+        sops_file,
+        input_type=sopsy.SopsyInOutType.JSON,
+    )
+    assert "--input-type" in s.global_args
+    assert "json" in s.global_args
+
+
+def test_sops_init_output(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with output arg."""
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    monkeypatch.setattr(shutil, "which", _return_sops_path)
+    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    s = sopsy.Sops(
+        sops_file,
+        output=Path("plain.json"),
+    )
+    d = s.decrypt()
+    assert "--output" in s.global_args
+    assert d is None
+
+
+def test_sops_init_outputtype(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with output_type arg."""
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    monkeypatch.setattr(shutil, "which", _return_sops_path)
+    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    s = sopsy.Sops(
+        sops_file,
+        output_type=sopsy.SopsyInOutType.YAML,
+    )
+    assert "--output-type" in s.global_args
+    assert "yaml" in s.global_args
+
+
 def test_sops_not_found(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function command not found."""
     sops_file = tmp_path / "secret.json"
