@@ -41,7 +41,7 @@ class Sops:
         in_place: bool = False,
         input_type: str | SopsyInOutType | None = None,
         output: str | Path | None = None,
-        output_type: str | SopsyInOutType | None = SopsyInOutType.JSON,
+        output_type: str | SopsyInOutType | None = None,
     ) -> None:
         """Initialize SOPS object."""
         self.file = Path(file).resolve(strict=True)
