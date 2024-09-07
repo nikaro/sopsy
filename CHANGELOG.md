@@ -1,3 +1,14 @@
+## 1.0.0 (2024-09-07)
+
+### Feat
+
+- allow to pass config as a python dict
+
+### Refactor
+
+- do not pass default output type
+- require pyyaml dependency
+
 ## 0.2.4 (2024-09-01)
 
 ### Fix
