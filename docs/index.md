@@ -2,7 +2,7 @@
 
 ## Installation
 
-SOPS binary should be installed and available in your `$PATH`:
+SOPS binary must be installed and available in your `$PATH`:
 
 ```sh
 # use your package manager to install it

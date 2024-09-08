@@ -1,6 +1,6 @@
 """SOPSy, a Python wrapper around SOPS.
 
-SOPS binary should be installed and available in your `$PATH`.
+SOPS binary must be installed and available in your `$PATH`.
 """
 
 from sopsy.errors import SopsyCommandFailedError
