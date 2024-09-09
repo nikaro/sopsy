@@ -5,20 +5,58 @@ on:
     - cron: "0 0 * * 3"
   workflow_dispatch:
 
-env:
-  TASK_X_REMOTE_TASKFILES: 1
-
 jobs:
   ci:
     name: CI
     uses: ./.github/workflows/ci.yml
     secrets: inherit
 
-  release:
-    name: Release
+  build_wheels:
+    name: Build wheels
+    needs: [ci]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-13, macos-14]
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v2
+
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.20
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+    name: Build source distribution
     needs: [ci]
     runs-on: ubuntu-latest
-    container: ghcr.io/nikaro/gha:latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build sdist
+        run: pipx run build --sdist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-sdist
+          path: dist/*.tar.gz
+
+  release:
+    name: Release
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
@@ -39,9 +77,13 @@ jobs:
           github_token: ${{ github.token }}
           no_raise: 3,21
 
-      - name: Build package
+      - name: Fetch build artifacts
         if: env.PREVIOUS_REVISION != env.REVISION
-        run: task build --yes
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-*
+          path: ./dist
+          merge-multiple: true
 
       - name: Release
         if: env.PREVIOUS_REVISION != env.REVISION
