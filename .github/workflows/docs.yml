@@ -3,6 +3,15 @@ name: Docs
 on:
   push:
     branches: ["main"]
+    paths:
+      - ./CHANGELOG.md
+      - ./docs/**
+      - ./LICENSE
+      - ./mkdocs.yml
+      - ./pyproject.toml
+      - ./src/**
+      - ./Taskfile.yml
+      - ./uv.lock
   workflow_dispatch:
 
 permissions:
