@@ -63,13 +63,13 @@ jobs:
       - name: Test
         run: task test --yes
 
-      - name: Report Coveralls
-        uses: coverallsapp/github-action@main
-        with:
-          format: python
-
       - name: Build
         run: task build --yes
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@main
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   check:
     name: Check

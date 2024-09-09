@@ -1,11 +1,10 @@
-![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fgithub.com%2Fnikaro%2Fsopsy%2Fraw%2Fmain%2Fpyproject.toml)
-![PyPI - Version](https://img.shields.io/pypi/v/sopsy)
-![Libraries.io dependency status for latest release](https://img.shields.io/librariesio/release/pypi/sopsy)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/nikaro/sopsy/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/nikaro/sopsy/badge.svg)](https://coveralls.io/github/nikaro/sopsy)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/sopsy)
-
 # SOPSy
+
+[![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fgithub.com%2Fnikaro%2Fsopsy%2Fraw%2Fmain%2Fpyproject.toml)](https://www.python.org/downloads/)
+[![PyPI - Version](https://img.shields.io/pypi/v/sopsy)](https://pypi.org/project/sopsy/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/sopsy)](https://pypi.org/project/sopsy/#files)
+[![build](https://github.com/nikaro/sopsy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nikaro/sopsy/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/github/nikaro/sopsy/graph/badge.svg?token=DEVPQ8M6C4)](https://codecov.io/github/nikaro/sopsy)
 
 SOPSy is a simple Python wrapper arround [SOPS](https://github.com/getsops/sops).
 
