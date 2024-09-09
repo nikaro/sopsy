@@ -32,7 +32,7 @@ theme:
         name: Switch to system preference
 
 nav:
-  - index.md
+  - Usage: index.md
   - reference.md
   - changelog.md
   - coverage.md
