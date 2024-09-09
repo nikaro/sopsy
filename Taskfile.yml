@@ -88,7 +88,7 @@ tasks:
       - ./requirements-dev.lock
       - ./src/**/*.py
       - ./tests/**/*.py
-    cmd: uv run pytest --cov-report=term-missing --cov-report=html --cov=sopsy ./tests/
+    cmd: uv run pytest --cov-report=term-missing --cov-report=html --junitxml=junit.xml --override-ini='junit_family=legacy' --cov=sopsy ./tests/
 
   bump:
     desc: Bump version

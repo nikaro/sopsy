@@ -13,4 +13,5 @@ wheels/
 .python-version
 .sl/
 .task/
+junit.xml
 site/
