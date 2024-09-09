@@ -51,6 +51,7 @@ jobs:
 
       - name: Install tools
         run: |
+          echo "$(pwd)/.venv/bin" >> "$GITHUB_PATH"
           echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
           /home/linuxbrew/.linuxbrew/bin/brew install \
             go-task \
@@ -61,6 +62,11 @@ jobs:
 
       - name: Test
         run: task test --yes
+
+      - name: Report Coveralls
+        uses: coverallsapp/github-action@main
+        with:
+          format: python
 
       - name: Build
         run: task build --yes
