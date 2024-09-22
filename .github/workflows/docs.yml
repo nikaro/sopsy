@@ -32,32 +32,28 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    container: ghcr.io/nikaro/gha:latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
-        env:
-          BRANCH: ${{ github.head_ref || github.ref_name }}
-          GH_TOKEN: ${{ github.token }}
-        run: |-
-          gh repo clone ${{ github.repository }} ${{ github.workspace }} -- --branch "$BRANCH"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-      - name: Install tools
-        run: |
-          echo "/home/linuxbrew/.linuxbrew/bin" >> "$GITHUB_PATH"
-          /home/linuxbrew/.linuxbrew/bin/brew install \
-            go-task \
-            uv \
+        uses: actions/checkout@main
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v3
+
       - name: Build package
         run: task gendoc --yes
+
       - name: Setup Pages
-        uses: actions/configure-pages@main
+        uses: actions/configure-pages@v5
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@main
+        uses: actions/upload-pages-artifact@v3
         with:
           path: './site'
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@main
+        uses: actions/deploy-pages@v4
