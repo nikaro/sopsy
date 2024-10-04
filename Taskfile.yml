@@ -98,9 +98,6 @@ tasks:
       - ./tests/**/*.py
       - ./pyproject.toml
       - ./requirements.lock
-    generates:
-      - ./dist/*.whl
-      - ./dist/*.tar.gz
     cmd: uv build
 
   gendoc:
