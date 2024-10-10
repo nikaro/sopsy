@@ -224,7 +224,6 @@ def test_sops_init_inputtype(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) ->
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
     monkeypatch.setattr(shutil, "which", _return_sops_path)
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     s = sopsy.Sops(
         sops_file,
         input_type=sopsy.SopsyInOutType.JSON,
@@ -253,7 +252,6 @@ def test_sops_init_outputtype(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
     monkeypatch.setattr(shutil, "which", _return_sops_path)
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     s = sopsy.Sops(
         sops_file,
         output_type=sopsy.SopsyInOutType.YAML,
