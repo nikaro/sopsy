@@ -13,6 +13,58 @@ from sopsy import errors
 from sopsy import sopsy
 from sopsy import utils
 
+os.environ["SOPS_AGE_KEY"] = (
+    "AGE-SECRET-KEY-1PZK567WHQ5DPQ9MZZCXAFSYHETZ9J59YTAKXD6CDWEPHVKG8LXHSZPDFN8"
+)
+os.environ["SOPS_AGE_RECIPIENTS"] = (
+    "age13q0ur562d70500mmsnxlhnmpu0cemanf9muk7tyeum0r88gnfa2scrus0l"
+)
+PLAIN_YAML = "hello: world"
+SECRET_YAML = r"""hello: ENC[AES256_GCM,data:yPLskFo=,iv:9UE/ZnohaTLw8CM0LUJLpHvauXqMK1elqlFx/P8NdqU=,tag:jcHJo4pVgIAH5Jv+k8MlSg==,type:str]
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age13q0ur562d70500mmsnxlhnmpu0cemanf9muk7tyeum0r88gnfa2scrus0l
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBRaU9Udk51bjgybWFiRTRT
+            SjN6L0VWdSt2Um9OdTduUjloRFU5SEVPVm5VCkU1WjY2aENzUThqbDhMZmtnYkpF
+            aVRWZ0xOcUpRazgxTlptSmVCampYQm8KLS0tIHhscW54V1lLbzBQNnB5Qis4azN2
+            d1FkS2cwRjFxYVA5TzNmVWNMWWlrTFUKD5fedKDEsPWRpX01yIQjlfNpeEIGsxZc
+            MJ/OGuLGnlKhXdm+mLKamAflyCAbUiX24V6EO+iRRCv2FgLZEWI3EQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2024-10-10T19:35:47Z"
+    mac: ENC[AES256_GCM,data:/kQOC8l4R6Tcu8N6QrBIf/9VjUdqkue7ZbLVmeKZbWv37j1kAe57AV8ets23d6smTFdBHElNRweq5bNp13wpwC/BdHakK/H3Kf1/CqI7gkbZ8Xouh+EpU432IC4Ozy4AK8HYHE8jqyNZbSwchGEX2TgoZr0AvmG8wF/ot27hdMg=,iv:OaDRqiHrDMsmFEMEh2miOOZrBmSpiYAlEIQEkMw68b0=,tag:BvtEbi7Xfa1yYJeFeuOkng==,type:str]
+    pgp: []
+    unencrypted_suffix: _unencrypted
+    version: 3.9.1
+"""  # noqa: E501, S105
+PLAIN_JSON = '{"hello":"world"}'
+SECRET_JSON = r"""{
+	"hello": "ENC[AES256_GCM,data:+QKTxfo=,iv:2h3rGwu4OZrJ/5JUlDxQXoN8iMOplViUnvC3lASRJ1g=,tag:413/HvDtt5IDBXpxNqxPaQ==,type:str]",
+	"sops": {
+		"kms": null,
+		"gcp_kms": null,
+		"azure_kv": null,
+		"hc_vault": null,
+		"age": [
+			{
+				"recipient": "age13q0ur562d70500mmsnxlhnmpu0cemanf9muk7tyeum0r88gnfa2scrus0l",
+				"enc": "-----BEGIN AGE ENCRYPTED FILE-----\nYWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSA3VkxSaW5JcE1WTWNEL1lH\nMzhJdjIxUWRvVUhvU3laT2lIeitNYSsza0hNCk1NZGN1cndmbmRTc0RRYkhQdkhI\nM3hNRFNhaVlyZE9lem11Ny9mL0lTZnMKLS0tIGNzS1ZLeDJrYlEwRzNiY1hYN3I2\nS3ZuNWNNdVRmTGFqOUlGZVFhclJxZnMKc8jVhERNU0EHh81J16ssU/N9waH7b8wc\nWK2DseZRZV0RFFf9quX5goXFHsrqRRaCfj9PBPLe47e/V6Z92K2oYg==\n-----END AGE ENCRYPTED FILE-----\n"
+			}
+		],
+		"lastmodified": "2024-10-10T19:34:48Z",
+		"mac": "ENC[AES256_GCM,data:jeFnmk2kTUJxyzYyzpqQTIn1uqmIsttL5lHhTm7YWXNfXZY+gBUQb8SqDdEVtepGQHoGy4XF3/pRsINHK7AzGPTtYR4JhQPPNrVOU03myiMvIN+xG2GMxRZH5SGxwu+e6h1GVhIM3wBGu+Biul5rBWPkNGE+RT5vOzeEfqENPfg=,iv:yJ5eoMr9oQ1fIaDUYaNVGQ9zVF2HJfCpqgsHO1943LY=,tag:gvJWJLPSiz7Kqt2otvmCUQ==,type:str]",
+		"pgp": null,
+		"unencrypted_suffix": "_unencrypted",
+		"version": "3.9.1"
+	}
+}
+"""  # noqa: E501, S105
+
 
 def test_get_dict_from_json() -> None:
     """Test utils.get_dict function with JSON input."""
@@ -26,7 +78,16 @@ def test_get_dict_from_yaml() -> None:
     assert result == {"hello": "world"}
 
 
-def test_get_dict_bad_content(tmp_path: Path) -> None:
+def test_get_dict_bad_content_json(tmp_path: Path) -> None:
+    """Test utils.get_dict function with unsupported input content type."""
+    bad_content = '{"i am":"not good":"json content"}'
+    bad_file = tmp_path / "hello.sh"
+    _ = bad_file.write_text(bad_content)
+    with pytest.raises(errors.SopsyUnparsableOutpoutTypeError):
+        _ = utils.get_dict(bad_file.read_bytes())
+
+
+def test_get_dict_bad_content_yaml(tmp_path: Path) -> None:
     """Test utils.get_dict function with unsupported input content type."""
     bad_content = "echo 'hello world'\n---\nhello: world\n"
     bad_file = tmp_path / "hello.sh"
@@ -201,11 +262,10 @@ def test_sops_init_extract(tmp_path: Path) -> None:
     assert "--extract" in s.global_args
 
 
-def test_sops_init_inplace(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_init_inplace(tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function with in_place arg."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(SECRET_JSON)
     s = sopsy.Sops(
         sops_file,
         in_place=True,
@@ -227,11 +287,10 @@ def test_sops_init_inputtype(tmp_path: Path) -> None:
     assert "json" in s.global_args
 
 
-def test_sops_init_output(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_init_output(tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function with output arg."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(SECRET_JSON)
     s = sopsy.Sops(
         sops_file,
         output=Path("plain.json"),
@@ -262,60 +321,78 @@ def test_sops_not_found(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None
         _ = sopsy.Sops(sops_file)
 
 
-def test_sops_decrypt(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_decrypt_json(tmp_path: Path) -> None:
     """Test sops.Sops.decrypt function."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(SECRET_JSON)
     d = sopsy.Sops(sops_file).decrypt()
     assert isinstance(d, dict)
     assert d == {"hello": "world"}
 
 
-def test_sops_encrypt(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_decrypt_yaml(tmp_path: Path) -> None:
+    """Test sops.Sops.decrypt function."""
+    sops_file = tmp_path / "secret.yaml"
+    _ = sops_file.write_text(SECRET_YAML)
+    d = sopsy.Sops(sops_file).decrypt()
+    assert isinstance(d, dict)
+    assert d == {"hello": "world"}
+
+
+def test_sops_encrypt_json(tmp_path: Path) -> None:
     """Test sops.Sops.encrypt function."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(PLAIN_JSON)
     e = sopsy.Sops(sops_file).encrypt()
     assert isinstance(e, dict)
-    assert e == {"hello": "world"}
+    assert "sops" in e
+    assert "hello" in e
+    assert e["hello"].startswith("ENC[")
 
 
-def test_sops_rotate(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_encrypt_yaml(tmp_path: Path) -> None:
+    """Test sops.Sops.encrypt function."""
+    sops_file = tmp_path / "secret.yaml"
+    _ = sops_file.write_text(PLAIN_YAML)
+    e = sopsy.Sops(sops_file).encrypt()
+    assert isinstance(e, dict)
+    assert "sops" in e
+    assert "hello" in e
+    assert e["hello"].startswith("ENC[")
+
+
+def test_sops_rotate(tmp_path: Path) -> None:
     """Test sops.Sops.rotate function."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(SECRET_JSON)
     r = sopsy.Sops(sops_file).rotate()
     assert isinstance(r, dict)
-    assert r == {"hello": "world"}
+    assert "sops" in r
+    assert "hello" in r
+    assert r["hello"].startswith("ENC[")
 
 
-def test_sops_get(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_get(tmp_path: Path) -> None:
     """Test sops.Sops.get function."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(SECRET_JSON)
     g = sopsy.Sops(sops_file).get("hello")
     assert isinstance(g, str)
     assert g == "world"
 
 
-def test_sops_get_none(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_get_none(tmp_path: Path) -> None:
     """Test sops.Sops.get function."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(SECRET_JSON)
     g = sopsy.Sops(sops_file).get("nonexistent")
     assert g is None
 
 
-def test_sops_get_default(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_get_default(tmp_path: Path) -> None:
     """Test sops.Sops.get function."""
     sops_file = tmp_path / "secret.json"
-    _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
+    _ = sops_file.write_text(SECRET_JSON)
     g = sopsy.Sops(sops_file).get("nonexistent", default="hello")
     assert isinstance(g, str)
     assert g == "hello"
