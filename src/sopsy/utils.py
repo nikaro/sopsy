@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -61,11 +62,19 @@ def get_dict(data: bytes | str) -> dict[str, Any]:
     """Parse data and return a dict from it."""
     out = {}
 
-    # pyyaml can load either yaml or json content
-    try:
-        out = yaml.safe_load(data)
-    except yaml.YAMLError as yaml_err:
-        raise SopsyUnparsableOutpoutTypeError from yaml_err
+    if isinstance(data, bytes):
+        data = data.decode()
+
+    if data.startswith("{"):
+        try:
+            out = json.loads(data)
+        except json.JSONDecodeError as json_err:
+            raise SopsyUnparsableOutpoutTypeError from json_err
+    else:
+        try:
+            out = yaml.safe_load(data)
+        except yaml.YAMLError as yaml_err:
+            raise SopsyUnparsableOutpoutTypeError from yaml_err
 
     return out
 
