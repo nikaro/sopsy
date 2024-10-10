@@ -170,33 +170,30 @@ def test_build_config(tmp_path: Path) -> None:
     }
 
 
-def test_sops_init(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_init(tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     s = sopsy.Sops(sops_file)
     assert s.file == sops_file
 
 
-def test_sops_init_config(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_init_config(tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function with config arg."""
     sops_config = tmp_path / "config.yml"
     _ = sops_config.write_text("config: value")
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     _ = sopsy.Sops(
         sops_file,
         config=str(sops_config),
     )
 
 
-def test_sops_init_extract(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_init_extract(tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function with extract arg."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     s = sopsy.Sops(
         sops_file,
         extract='["hello"]',
@@ -208,7 +205,6 @@ def test_sops_init_inplace(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> N
     """Test sops.Sops.__init__ function with in_place arg."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     s = sopsy.Sops(
         sops_file,
@@ -219,11 +215,10 @@ def test_sops_init_inplace(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> N
     assert d is None
 
 
-def test_sops_init_inputtype(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_init_inputtype(tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function with input_type arg."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     s = sopsy.Sops(
         sops_file,
         input_type=sopsy.SopsyInOutType.JSON,
@@ -236,7 +231,6 @@ def test_sops_init_output(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> No
     """Test sops.Sops.__init__ function with output arg."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     s = sopsy.Sops(
         sops_file,
@@ -247,11 +241,10 @@ def test_sops_init_output(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> No
     assert d is None
 
 
-def test_sops_init_outputtype(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_sops_init_outputtype(tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function with output_type arg."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     s = sopsy.Sops(
         sops_file,
         output_type=sopsy.SopsyInOutType.YAML,
@@ -273,7 +266,6 @@ def test_sops_decrypt(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sops.Sops.decrypt function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     d = sopsy.Sops(sops_file).decrypt()
     assert isinstance(d, dict)
@@ -284,7 +276,6 @@ def test_sops_encrypt(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sops.Sops.encrypt function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     e = sopsy.Sops(sops_file).encrypt()
     assert isinstance(e, dict)
@@ -295,7 +286,6 @@ def test_sops_rotate(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sops.Sops.rotate function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     r = sopsy.Sops(sops_file).rotate()
     assert isinstance(r, dict)
@@ -306,7 +296,6 @@ def test_sops_get(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sops.Sops.get function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     g = sopsy.Sops(sops_file).get("hello")
     assert isinstance(g, str)
@@ -317,7 +306,6 @@ def test_sops_get_none(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sops.Sops.get function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     g = sopsy.Sops(sops_file).get("nonexistent")
     assert g is None
@@ -327,15 +315,10 @@ def test_sops_get_default(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> No
     """Test sops.Sops.get function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text('{"hello":"world"}')
-    monkeypatch.setattr(shutil, "which", _return_sops_path)
     monkeypatch.setattr(subprocess, "run", _mock_subprocess_run)
     g = sopsy.Sops(sops_file).get("nonexistent", default="hello")
     assert isinstance(g, str)
     assert g == "hello"
-
-
-def _return_sops_path(*_args: Any, **_kwargs: Any) -> str:
-    return "/usr/bin/sops"
 
 
 def _not_return_sops_path(*_args: Any, **_kwargs: Any) -> None:
