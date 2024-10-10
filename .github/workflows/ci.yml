@@ -42,7 +42,7 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Setup SOPS
-        uses: nikaro/actions/getsops@main
+        uses: nikaro/actions/getsops@fix/getsops-inline-script
 
       - name: Test
         run: task test --yes
