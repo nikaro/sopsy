@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -14,6 +15,7 @@ from sopsy.errors import SopsyConfigNotFoundError
 from sopsy.errors import SopsyUnparsableOutpoutTypeError
 
 DEFAULT_CONFIG_FILE = Path(".sops.yaml")
+logger = logging.getLogger(__name__)
 
 
 def build_config(
@@ -36,6 +38,7 @@ def build_config(
                 config[k].insert(0, *config_dict[k])
             else:
                 config[k] = config_dict[k]
+    logger.debug("config: %s", config)
     return config
 
 
@@ -57,6 +60,7 @@ def find_sops_config(config_path: Path = DEFAULT_CONFIG_FILE) -> Path | None:
             msg = f"config file does not exists '{config_path}'"
             if config_path == DEFAULT_CONFIG_FILE:
                 # do not fail on default config file absence
+                logger.warning("default %s", msg)
                 return None
             raise SopsyConfigNotFoundError(msg)
         cwd = cwd.parent
@@ -86,6 +90,7 @@ def get_dict(data: bytes | str) -> dict[str, Any]:
 def run_cmd(cmd: list[str], *, to_dict: bool) -> bytes | dict[str, Any] | None:
     """Run the given SOPS command."""
     try:
+        logger.debug("run_cmd: %s", cmd)
         proc = subprocess.run(cmd, capture_output=True, check=True)  # noqa: S603
     except subprocess.CalledProcessError as proc_err:
         raise SopsyCommandFailedError(proc_err.stderr.decode()) from proc_err
