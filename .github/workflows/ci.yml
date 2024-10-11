@@ -36,10 +36,13 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v3
+
+      - name: Setup sops
+        run: brew install sops
 
       - name: Test
         run: task test --yes
@@ -63,7 +66,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@main
+        uses: actions/checkout@v4
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v3
