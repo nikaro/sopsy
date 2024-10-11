@@ -1,3 +1,10 @@
+## 1.0.1 (2024-10-11)
+
+### Fix
+
+- do not fail on default config file absence
+- use json lib to parse json content
+
 ## 1.0.0 (2024-09-07)
 
 ### Feat
