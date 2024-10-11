@@ -186,11 +186,10 @@ def test_find_sops_config_custom_in_sub_dir_relative(tmp_path: Path) -> None:
     assert sops_config == result
 
 
-def test_find_sops_config_default_nonexistent(tmp_path: Path) -> None:
+def test_find_sops_config_default_nonexistent() -> None:
     """Test utils.find_sops_config function with non existent default file."""
-    os.chdir(tmp_path)
-    with pytest.raises(errors.SopsyConfigNotFoundError):
-        _ = utils.find_sops_config()
+    result = utils.find_sops_config()
+    assert None is result
 
 
 def test_find_sops_config_custom_relative_nonexistent(tmp_path: Path) -> None:

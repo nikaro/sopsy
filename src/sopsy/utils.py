@@ -20,11 +20,12 @@ def build_config(
     config_path: Path | None, config_dict: dict[str, Any] | None
 ) -> dict[str, Any]:
     """Merge config file content and python config dict."""
-    config = {}
+    config: dict[str, Any] = {}
     if not config_path:
         config_path = DEFAULT_CONFIG_FILE
     config_path = find_sops_config(Path(config_path))
-    config = yaml.safe_load(config_path.read_text())
+    if config_path:
+        config = yaml.safe_load(config_path.read_text())
     if config_dict:
         for k in config_dict:
             if k not in config:
@@ -38,7 +39,7 @@ def build_config(
     return config
 
 
-def find_sops_config(config_path: Path = DEFAULT_CONFIG_FILE) -> Path:
+def find_sops_config(config_path: Path = DEFAULT_CONFIG_FILE) -> Path | None:
     """Try to find the configuration file until the filesystem root."""
     if config_path.is_absolute():
         if config_path.exists():
@@ -53,7 +54,10 @@ def find_sops_config(config_path: Path = DEFAULT_CONFIG_FILE) -> Path:
             return cwd_config
         cwd_parent = cwd.parent
         if cwd == cwd_parent:
-            msg = f"config path {config_path} does not exists"
+            msg = f"config file does not exists '{config_path}'"
+            if config_path == DEFAULT_CONFIG_FILE:
+                # do not fail on default config file absence
+                return None
             raise SopsyConfigNotFoundError(msg)
         cwd = cwd.parent
 
