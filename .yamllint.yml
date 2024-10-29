@@ -1,5 +1,6 @@
 extends: default
 
+ignore-from-file: .gitignore
 rules:
   document-start: disable
   line-length: disable
