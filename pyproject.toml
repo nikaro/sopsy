@@ -30,8 +30,6 @@ Changelog = "https://sopsy.nikaro.net/changelog/"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.uv]
-dev-dependencies = [
 [dependency-groups]
 dev = [
   "basedpyright>=1.15.1",
@@ -39,7 +37,6 @@ dev = [
   "mkdocs-coverage>=1.1.0",
   "mkdocs-material>=9.5.34",
   "mkdocstrings[python]>=0.26.1",
-  "mypy>=1.11.2",
   "pytest-cov>=5.0.0",
   "pytest>=7.4.3",
   "ruff>=0.6.3",

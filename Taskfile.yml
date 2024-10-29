@@ -58,8 +58,6 @@ tasks:
       - uv run ruff format --check
       - uv run ruff check
       - uv run basedpyright ./src/
-      - cmd: uv run mypy ./src/
-        ignore_error: true
 
   format:
     desc: Run formatters
