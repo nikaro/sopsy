@@ -32,6 +32,8 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = [
+[dependency-groups]
+dev = [
   "basedpyright>=1.15.1",
   "black>=24.8.0",
   "mkdocs-coverage>=1.1.0",
