@@ -33,7 +33,7 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Bump
-        uses: commitizen-tools/commitizen-action@0.21.0
+        uses: commitizen-tools/commitizen-action@0.22.0
         with:
           changelog_increment_filename: _changelog.md
           github_token: ${{ github.token }}
