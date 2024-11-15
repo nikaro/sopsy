@@ -121,3 +121,4 @@ tasks:
       - rm -rf ./.pytest_cache/
       - fd --type directory --no-ignore __pycache__ | xargs --no-run-if-empty rm -rf
       - rm -rf ./site/
+      - rm -rf ./htmlcov/
