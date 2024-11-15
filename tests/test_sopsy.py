@@ -311,6 +311,23 @@ def test_sops_init_outputtype(tmp_path: Path) -> None:
     assert "yaml" in s.global_args
 
 
+def test_sops_init_default_bin(tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with binary_path arg."""
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    s = sopsy.Sops(sops_file)
+    assert s.bin.name == "sops"
+
+
+def test_sops_init_custom_bin(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Test sops.Sops.__init__ function with binary_path arg."""
+    sops_file = tmp_path / "secret.json"
+    _ = sops_file.write_text('{"hello":"world"}')
+    monkeypatch.setattr(shutil, "which", _return_sops_path)
+    s = sopsy.Sops(sops_file, binary_path="/path/to/mysops")
+    assert s.bin.name == "mysops"
+
+
 def test_sops_not_found(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     """Test sops.Sops.__init__ function command not found."""
     sops_file = tmp_path / "secret.json"
@@ -399,6 +416,10 @@ def test_sops_get_default(tmp_path: Path) -> None:
 
 def _not_return_sops_path(*_args: Any, **_kwargs: Any) -> None:
     return None
+
+
+def _return_sops_path(*args: Any, **_kwargs: Any) -> Path:
+    return Path(*args)
 
 
 def _mock_subprocess_run(*_args: Any, **_kwargs: Any) -> object:

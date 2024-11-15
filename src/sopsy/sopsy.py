@@ -51,6 +51,7 @@ class Sops:
         self,
         file: str | Path,
         *,
+        binary_path: str | Path | None = None,
         config: str | Path | None = None,
         config_dict: dict[str, Any] | None = None,
         extract: str | None = None,
@@ -64,7 +65,11 @@ class Sops:
         Examples:
             >>> from pathlib import Path
             >>> from sopsy import Sops
-            >>> sops = Sops(Path("secrets.json"), config=Path(".config/sops.yml"))
+            >>> sops = Sops(
+            >>>     binary_path="/app/bin/my_custom_sops",
+            >>>     config=Path(".config/sops.yml"),
+            >>>     file=Path("secrets.json"),
+            >>> )
 
         Args:
             file: Path to the SOPS file.
@@ -78,9 +83,14 @@ class Sops:
                 specified.
             output_type: If not set, sops will use the input file's extension to
                 determine the output format.
+            binary_path: Path to the SOPS binary. If not defined it will search for it
+                in the PATH environment variable.
         """
+        self.bin: Path = Path("sops")
         self.file: Path = Path(file).resolve(strict=True)
         self.global_args: list[str] = []
+        if binary_path:
+            self.bin = Path(binary_path)
         if extract:
             self.global_args.extend(["--extract", extract])
         if in_place:
@@ -102,9 +112,9 @@ class Sops:
             config_tmp = fp.name
         self.global_args.extend(["--config", config_tmp])
 
-        if not shutil.which("sops"):
+        if not shutil.which(self.bin):
             msg = (
-                "sops command not found, "
+                f"{self.bin} command not found, "
                 "you may need to install it and/or add it to your PATH"
             )
             raise SopsyCommandNotFoundError(msg)
@@ -124,7 +134,7 @@ class Sops:
         Returns:
             The output of the sops command.
         """
-        cmd = ["sops", "--decrypt", *self.global_args, str(self.file)]
+        cmd = [str(self.bin), "--decrypt", *self.global_args, str(self.file)]
         return run_cmd(cmd, to_dict=to_dict)
 
     def encrypt(self, *, to_dict: bool = True) -> bytes | dict[str, Any] | None:
@@ -145,7 +155,7 @@ class Sops:
         Returns:
             The output of the sops command.
         """
-        cmd = ["sops", "--encrypt", *self.global_args, str(self.file)]
+        cmd = [str(self.bin), "--encrypt", *self.global_args, str(self.file)]
         return run_cmd(cmd, to_dict=to_dict)
 
     def get(self, key: str, *, default: Any = None) -> Any:  # noqa: ANN401
@@ -183,5 +193,5 @@ class Sops:
         Returns:
             The output of the sops command.
         """
-        cmd = ["sops", "--rotate", *self.global_args, str(self.file)]
+        cmd = [str(self.bin), "--rotate", *self.global_args, str(self.file)]
         return run_cmd(cmd, to_dict=to_dict)
