@@ -10,14 +10,14 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
   "Intended Audience :: System Administrators",
-  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3",
   "Topic :: Security :: Cryptography",
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-license = { text = "GPL-3.0-or-later" }
+license = { text = "MIT" }
 keywords = ["sops"]
 
 [project.urls]
