@@ -1,3 +1,9 @@
+## 1.1.0 (2024-11-18)
+
+### Feat
+
+- allow sops binary path customization (#75)
+
 ## 1.0.1 (2024-10-11)
 
 ### Fix
