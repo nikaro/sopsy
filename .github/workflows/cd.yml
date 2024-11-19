@@ -14,29 +14,6 @@ jobs:
     uses: ./.github/workflows/ci.yml
     secrets: inherit
 
-  build:
-    name: Build
-    needs: [ci]
-    runs-on: ubuntu-latest
-    container: ghcr.io/nikaro/gha:latest
-    permissions:
-      contents: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v3
-
-      - name: Build package
-        run: task build --yes
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: sopsy-dist
-          path: ./dist/
-
   release:
     name: Release
     needs: [ci]
@@ -58,17 +35,25 @@ jobs:
           github_token: ${{ github.token }}
           no_raise: 3,21
 
+      - name: Download artifacts
+        if: env.PREVIOUS_REVISION != env.REVISION
+        uses: actions/download-artifact@v4
+        with:
+          name: sopsy-dist
+          path: ./dist/
+
       - name: Release
         id: release
         if: env.PREVIOUS_REVISION != env.REVISION
         uses: softprops/action-gh-release@v2
         with:
           body_path: _changelog.md
+          files: ./dist/*
           tag_name: ${{ env.REVISION }}
 
   publish:
     name: Publish
-    needs: [build, release]
+    needs: [release]
     if: needs.release.outputs.id != ''
     runs-on: ubuntu-latest
     permissions:

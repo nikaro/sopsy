@@ -74,6 +74,12 @@ jobs:
       - name: Build
         run: task build --yes
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sopsy-dist
+          path: ./dist/
+
   check:
     name: Check
     permissions: {}
