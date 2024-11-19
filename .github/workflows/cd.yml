@@ -14,23 +14,42 @@ jobs:
     uses: ./.github/workflows/ci.yml
     secrets: inherit
 
-  release:
-    name: Release
+  build:
+    name: Build
     needs: [ci]
     runs-on: ubuntu-latest
     container: ghcr.io/nikaro/gha:latest
     permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Build package
+        run: task build --yes
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sopsy-dist
+          path: ./dist/
+
+  release:
+    name: Release
+    needs: [ci]
+    runs-on: ubuntu-latest
+    permissions:
       contents: write
-      id-token: write
-    environment: release
+    outputs:
+      id: ${{ steps.release.outputs.id }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v3
 
       - name: Bump
         uses: commitizen-tools/commitizen-action@0.22.0
@@ -39,20 +58,31 @@ jobs:
           github_token: ${{ github.token }}
           no_raise: 3,21
 
-      - name: Build package
-        if: env.PREVIOUS_REVISION != env.REVISION
-        run: task build --yes
-
       - name: Release
+        id: release
         if: env.PREVIOUS_REVISION != env.REVISION
         uses: softprops/action-gh-release@v2
         with:
           body_path: _changelog.md
-          files: ./dist/*
           tag_name: ${{ env.REVISION }}
+
+  publish:
+    name: Publish
+    needs: [build, release]
+    if: needs.release.outputs.id != ''
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    environment: release
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: sopsy-dist
+          path: ./dist/
 
       - name: Publish package to PyPI
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: pypa/gh-action-pypi-publish@release/v1.11
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
           attestations: true
