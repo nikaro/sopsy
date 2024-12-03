@@ -5,6 +5,7 @@
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/sopsy)](https://pypi.org/project/sopsy/#files)
 [![build](https://github.com/nikaro/sopsy/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/nikaro/sopsy/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/nikaro/sopsy/graph/badge.svg?token=DEVPQ8M6C4)](https://codecov.io/github/nikaro/sopsy)
+[![Ceasefire Now](https://badge.techforpalestine.org/default)](https://techforpalestine.org/learn-more)
 
 SOPSy is a simple Python wrapper arround [SOPS](https://github.com/getsops/sops).
 
