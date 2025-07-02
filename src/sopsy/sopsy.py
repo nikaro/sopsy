@@ -11,6 +11,7 @@ from typing import Any
 import yaml
 
 from sopsy.errors import SopsyCommandNotFoundError
+from sopsy.errors import SopsyError
 from sopsy.utils import build_config
 from sopsy.utils import run_cmd
 
@@ -18,7 +19,7 @@ from sopsy.utils import run_cmd
 class SopsyInOutType(Enum):
     """SOPS output types.
 
-    Intend to be passed on `Sops().input_type` and `Sops().output_type`.
+    Intended to be passed on `Sops().input_type` and `Sops().output_type`.
 
     Attributes:
         BINARY (str): Binary type.
@@ -37,6 +38,20 @@ class SopsyInOutType(Enum):
         return f"{self.value}"
 
 
+class SopsyInputSource(Enum):
+    """SOPS input source.
+
+    Used to determinie wether input data come from a file or stdin.
+
+    Attributes:
+        FILE (str): From an on-disk file.
+        STDIN (str): From stdin.
+    """
+
+    FILE = "file"
+    STDIN = "stdin"
+
+
 class Sops:
     """SOPS file object.
 
@@ -47,9 +62,9 @@ class Sops:
             are doing.
     """
 
-    def __init__(
+    def __init__(  # noqa: C901
         self,
-        file: str | Path,
+        file: str | Path | bytes,
         *,
         binary_path: str | Path | None = None,
         config: str | Path | None = None,
@@ -59,6 +74,7 @@ class Sops:
         input_type: str | SopsyInOutType | None = None,
         output: str | Path | None = None,
         output_type: str | SopsyInOutType | None = None,
+        input_source: SopsyInputSource = SopsyInputSource.FILE,
     ) -> None:
         """Initialize SOPS object.
 
@@ -72,7 +88,7 @@ class Sops:
             >>> )
 
         Args:
-            file: Path to the SOPS file.
+            file: Path to the SOPS file or content to encrypt/decrypt.
             config: Path to a custom SOPS config file.
             config_dict: Allow to pass SOPS config as a python dict.
             extract: Extract a specific key or branch from the input document.
@@ -85,10 +101,12 @@ class Sops:
                 determine the output format.
             binary_path: Path to the SOPS binary. If not defined it will search for it
                 in the PATH environment variable.
+            input_source: Wether input data come from a file or stdin.
         """
         self.bin: Path = Path("sops")
-        self.file: Path = Path(file).resolve(strict=True)
+        self.file = file
         self.global_args: list[str] = []
+        self.input_source = input_source
         if binary_path:
             self.bin = Path(binary_path)
         if extract:
@@ -97,6 +115,7 @@ class Sops:
             self.global_args.extend(["--in-place"])
         if input_type:
             self.global_args.extend(["--input-type", str(input_type)])
+            self.input_type = input_type
         if output:
             self.global_args.extend(["--output", str(output)])
         if output_type:
@@ -110,7 +129,15 @@ class Sops:
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as fp:
             yaml.dump(config_dict, fp)
             config_tmp = fp.name
-        self.global_args.extend(["--config", config_tmp])
+        self.config = ["--config", config_tmp]
+
+        if input_source == SopsyInputSource.STDIN and not input_type:
+            msg = "When using stdin source, input MUST be specified"
+            raise SopsyError(msg)
+
+        if input_source == SopsyInputSource.STDIN and isinstance(file, Path):
+            msg = "Path type cannot be used with stdin input source."
+            raise SopsyError(msg)
 
         if not shutil.which(self.bin):
             msg = (
@@ -119,7 +146,7 @@ class Sops:
             )
             raise SopsyCommandNotFoundError(msg)
 
-    def decrypt(self, *, to_dict: bool = True) -> bytes | dict[str, Any] | None:
+    def decrypt(self, *, to_dict: bool = True) -> str | bytes | dict[str, Any] | None:
         """Decrypt SOPS file.
 
         Examples:
@@ -134,10 +161,17 @@ class Sops:
         Returns:
             The output of the sops command.
         """
-        cmd = [str(self.bin), "--decrypt", *self.global_args, str(self.file)]
-        return run_cmd(cmd, to_dict=to_dict)
+        cmd = [str(self.bin), *self.config, "decrypt", *self.global_args]
+        if self.input_source == SopsyInputSource.STDIN:
+            cmd.extend(["--filename-override", f"dummy.{self.input_type}"])
+            input_data = self.file
+            assert not isinstance(input_data, Path)  # noqa: S101
+        else:
+            cmd.append(str(self.file))
+            input_data = None
+        return run_cmd(cmd, to_dict=to_dict, input_data=input_data)
 
-    def encrypt(self, *, to_dict: bool = True) -> bytes | dict[str, Any] | None:
+    def encrypt(self, *, to_dict: bool = True) -> str | bytes | dict[str, Any] | None:
         """Encrypt SOPS file.
 
         Examples:
@@ -155,8 +189,15 @@ class Sops:
         Returns:
             The output of the sops command.
         """
-        cmd = [str(self.bin), "--encrypt", *self.global_args, str(self.file)]
-        return run_cmd(cmd, to_dict=to_dict)
+        cmd = [str(self.bin), *self.config, "encrypt", *self.global_args]
+        if self.input_source == SopsyInputSource.STDIN:
+            cmd.extend(["--filename-override", f"dummy.{self.input_type}"])
+            input_data = self.file
+            assert not isinstance(input_data, Path)  # noqa: S101
+        else:
+            cmd.append(str(self.file))
+            input_data = None
+        return run_cmd(cmd, to_dict=to_dict, input_data=input_data)
 
     def get(self, key: str, *, default: Any = None) -> Any:  # noqa: ANN401
         """Get a specific key from a SOPS encrypted file.
@@ -179,7 +220,7 @@ class Sops:
         data: dict[Any, Any] = self.decrypt()  # pyright: ignore[reportAssignmentType]
         return data.get(key) or default
 
-    def rotate(self, *, to_dict: bool = True) -> bytes | dict[str, Any] | None:
+    def rotate(self, *, to_dict: bool = True) -> str | bytes | dict[str, Any] | None:
         """Rotate encryption keys and re-encrypt values from SOPS file.
 
         Examples:
@@ -193,5 +234,5 @@ class Sops:
         Returns:
             The output of the sops command.
         """
-        cmd = [str(self.bin), "--rotate", *self.global_args, str(self.file)]
+        cmd = [str(self.bin), *self.config, "rotate", *self.global_args, str(self.file)]
         return run_cmd(cmd, to_dict=to_dict)
