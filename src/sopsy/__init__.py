@@ -10,6 +10,7 @@ from sopsy.errors import SopsyError
 from sopsy.errors import SopsyUnparsableOutpoutTypeError
 from sopsy.sopsy import Sops
 from sopsy.sopsy import SopsyInOutType
+from sopsy.sopsy import SopsyInputSource
 
 __all__ = [
     "Sops",
@@ -18,5 +19,6 @@ __all__ = [
     "SopsyConfigNotFoundError",
     "SopsyError",
     "SopsyInOutType",
+    "SopsyInputSource",
     "SopsyUnparsableOutpoutTypeError",
 ]
