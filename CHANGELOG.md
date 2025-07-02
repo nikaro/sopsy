@@ -1,3 +1,9 @@
+## 1.2.0 (2025-07-02)
+
+### Feat
+
+- allow to handle data from stdin
+
 ## 1.1.0 (2024-11-18)
 
 ### Feat
