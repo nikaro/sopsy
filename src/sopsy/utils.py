@@ -87,13 +87,26 @@ def get_dict(data: bytes | str) -> dict[str, Any]:
     return out
 
 
-def run_cmd(cmd: list[str], *, to_dict: bool) -> bytes | dict[str, Any] | None:
+def run_cmd(
+    cmd: list[str], *, to_dict: bool, input_data: str | bytes | None = None
+) -> str | bytes | dict[str, Any] | None:
     """Run the given SOPS command."""
     try:
         logger.debug("run_cmd: %s", cmd)
-        proc = subprocess.run(cmd, capture_output=True, check=True)  # noqa: S603
+        logger.debug("to_dict: %s", to_dict)
+        logger.debug("input_data: %s", input_data)
+        proc = subprocess.run(  # noqa: S603
+            cmd,
+            input=input_data,
+            text=isinstance(input_data, str),
+            capture_output=True,
+            check=True,
+        )
     except subprocess.CalledProcessError as proc_err:
-        raise SopsyCommandFailedError(proc_err.stderr.decode()) from proc_err
+        msg = proc_err.stderr
+        if isinstance(msg, bytes):
+            msg = msg.decode()
+        raise SopsyCommandFailedError(msg) from proc_err
     if {"-i", "--in-place", "--output"}.intersection(cmd):
         return None
     if to_dict:

@@ -12,11 +12,11 @@ from sopsy.sopsy import Sops
 from sopsy.sopsy import SopsyInOutType
 
 __all__ = [
+    "Sops",
     "SopsyCommandFailedError",
     "SopsyCommandNotFoundError",
     "SopsyConfigNotFoundError",
     "SopsyError",
-    "SopsyUnparsableOutpoutTypeError",
-    "Sops",
     "SopsyInOutType",
+    "SopsyUnparsableOutpoutTypeError",
 ]

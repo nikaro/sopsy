@@ -338,7 +338,7 @@ def test_sops_not_found(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None
 
 
 def test_sops_decrypt_json(tmp_path: Path) -> None:
-    """Test sops.Sops.decrypt function."""
+    """Test sops.Sops.decrypt with JSON data function."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text(SECRET_JSON)
     d = sopsy.Sops(sops_file).decrypt()
@@ -346,8 +346,19 @@ def test_sops_decrypt_json(tmp_path: Path) -> None:
     assert d == {"hello": "world"}
 
 
+def test_sops_decrypt_json_from_stdin() -> None:
+    """Test sops.Sops.decrypt with JSON data function."""
+    d = sopsy.Sops(
+        SECRET_JSON,
+        input_source=sopsy.SopsyInputSource.STDIN,
+        input_type="json",
+    ).decrypt()
+    assert isinstance(d, dict)
+    assert d == {"hello": "world"}
+
+
 def test_sops_decrypt_yaml(tmp_path: Path) -> None:
-    """Test sops.Sops.decrypt function."""
+    """Test sops.Sops.decrypt function with YAML data."""
     sops_file = tmp_path / "secret.yaml"
     _ = sops_file.write_text(SECRET_YAML)
     d = sopsy.Sops(sops_file).decrypt()
@@ -355,8 +366,19 @@ def test_sops_decrypt_yaml(tmp_path: Path) -> None:
     assert d == {"hello": "world"}
 
 
+def test_sops_decrypt_yaml_from_stdin() -> None:
+    """Test sops.Sops.decrypt with YAML data function."""
+    d = sopsy.Sops(
+        SECRET_YAML,
+        input_source=sopsy.SopsyInputSource.STDIN,
+        input_type="yaml",
+    ).decrypt()
+    assert isinstance(d, dict)
+    assert d == {"hello": "world"}
+
+
 def test_sops_encrypt_json(tmp_path: Path) -> None:
-    """Test sops.Sops.encrypt function."""
+    """Test sops.Sops.encrypt function with JSON data."""
     sops_file = tmp_path / "secret.json"
     _ = sops_file.write_text(PLAIN_JSON)
     e = sopsy.Sops(sops_file).encrypt()
@@ -366,8 +388,21 @@ def test_sops_encrypt_json(tmp_path: Path) -> None:
     assert e["hello"].startswith("ENC[")
 
 
+def test_sops_encrypt_json_from_stdin() -> None:
+    """Test sops.Sops.encrypt function with JSON data from stdin."""
+    e = sopsy.Sops(
+        PLAIN_JSON,
+        input_source=sopsy.SopsyInputSource.STDIN,
+        input_type="json",
+    ).encrypt()
+    assert isinstance(e, dict)
+    assert "sops" in e
+    assert "hello" in e
+    assert e["hello"].startswith("ENC[")
+
+
 def test_sops_encrypt_yaml(tmp_path: Path) -> None:
-    """Test sops.Sops.encrypt function."""
+    """Test sops.Sops.encrypt function with YAML data."""
     sops_file = tmp_path / "secret.yaml"
     _ = sops_file.write_text(PLAIN_YAML)
     e = sopsy.Sops(sops_file).encrypt()
@@ -375,6 +410,40 @@ def test_sops_encrypt_yaml(tmp_path: Path) -> None:
     assert "sops" in e
     assert "hello" in e
     assert e["hello"].startswith("ENC[")
+
+
+def test_sops_encrypt_yaml_from_stdin() -> None:
+    """Test sops.Sops.encrypt function with YAML data from stdin."""
+    e = sopsy.Sops(
+        PLAIN_YAML,
+        input_source=sopsy.SopsyInputSource.STDIN,
+        input_type="yaml",
+    ).encrypt()
+    assert isinstance(e, dict)
+    assert "sops" in e
+    assert "hello" in e
+    assert e["hello"].startswith("ENC[")
+
+
+def test_sops_from_stdin_missing_input_type() -> None:
+    """Test missing input_type when using stdin input_source."""
+    with pytest.raises(errors.SopsyError):
+        _ = sopsy.Sops(
+            PLAIN_YAML,
+            input_source=sopsy.SopsyInputSource.STDIN,
+        )
+
+
+def test_sops_path_from_stdin(tmp_path: Path) -> None:
+    """Ensure that trying to encrypt a Path from stdin fails."""
+    sops_file = tmp_path / "secret.yaml"
+    _ = sops_file.write_text(PLAIN_YAML)
+    with pytest.raises(errors.SopsyError):
+        _ = sopsy.Sops(
+            sops_file,
+            input_source=sopsy.SopsyInputSource.STDIN,
+            input_type="yaml",
+        )
 
 
 def test_sops_rotate(tmp_path: Path) -> None:
