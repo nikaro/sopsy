@@ -56,10 +56,11 @@ class Sops:
     """SOPS file object.
 
     Attributes:
-        file: Path to the SOPS file.
+        file: Path to the SOPS file or content to encrypt/decrypt.
         global_args: The list of arguments that will be passed to the `sops` shell
             command. It can be used to customize it. Use it only if you know what you
             are doing.
+        input_source: Wether input data come from a file or stdin.
     """
 
     def __init__(  # noqa: C901
