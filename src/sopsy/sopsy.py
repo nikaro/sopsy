@@ -56,6 +56,7 @@ class Sops:
     """SOPS file object.
 
     Attributes:
+        bin: Path to the SOPS binary.
         file: Path to the SOPS file or content to encrypt/decrypt.
         global_args: The list of arguments that will be passed to the `sops` shell
             command. It can be used to customize it. Use it only if you know what you
@@ -104,12 +105,10 @@ class Sops:
                 in the PATH environment variable.
             input_source: Wether input data come from a file or stdin.
         """
-        self.bin: Path = Path("sops")
+        self.bin = Path(binary_path) if binary_path else Path("sops")
         self.file = file
         self.global_args: list[str] = []
         self.input_source = input_source
-        if binary_path:
-            self.bin = Path(binary_path)
         if extract:
             self.global_args.extend(["--extract", extract])
         if in_place:
