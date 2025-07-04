@@ -65,8 +65,9 @@ convention = "pep257"
 [tool.ruff.lint.pylint]
 max-args = 15
 
-[tool.pyright]
+[tool.basedpyright]
 reportAny = false
+reportExplicitAny = false
 reportImplicitOverride = false
 
 [tool.commitizen]
