@@ -105,17 +105,17 @@ class Sops:
                 in the PATH environment variable.
             input_source: Wether input data come from a file or stdin.
         """
-        self.bin = Path(binary_path) if binary_path else Path("sops")
-        self.file = file
+        self.bin: Path = Path(binary_path) if binary_path else Path("sops")
+        self.file: str | Path | bytes = file
         self.global_args: list[str] = []
-        self.input_source = input_source
+        self.input_source: SopsyInputSource = input_source
         if extract:
             self.global_args.extend(["--extract", extract])
         if in_place:
             self.global_args.extend(["--in-place"])
         if input_type:
             self.global_args.extend(["--input-type", str(input_type)])
-            self.input_type = input_type
+            self.input_type: str | SopsyInOutType | None = input_type
         if output:
             self.global_args.extend(["--output", str(output)])
         if output_type:
@@ -129,7 +129,7 @@ class Sops:
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as fp:
             yaml.dump(config_dict, fp)
             config_tmp = fp.name
-        self.config = ["--config", config_tmp]
+        self.config: list[str] = ["--config", config_tmp]
 
         if input_source == SopsyInputSource.STDIN and not input_type:
             msg = "When using stdin source, input MUST be specified"
