@@ -1,0 +1,45 @@
+repos:
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-merge-conflict
+      # - id: check-yaml
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.17.2
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.8.3
+    hooks:
+      - id: commitizen
+      - id: commitizen-branch
+        stages:
+          - post-commit
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+      - id: python-check-blanket-type-ignore
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.2
+    hooks:
+      - id: ruff-check
+      - id: ruff-format
+  - repo: https://github.com/DetachHead/basedpyright-pre-commit-mirror
+    rev: 1.29.5
+    hooks:
+      - id: basedpyright

@@ -5,9 +5,6 @@ on:
     - cron: "0 0 1 * *"
   workflow_dispatch:
 
-env:
-  TASK_X_REMOTE_TASKFILES: 1
-
 jobs:
   ci:
     name: CI
@@ -24,12 +21,12 @@ jobs:
       id: ${{ steps.release.outputs.id }}
     steps:
       - name: Checkout
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
         with:
           fetch-depth: 0
 
       - name: Bump
-        uses: commitizen-tools/commitizen-action@5b0848cd060263e24602d1eba03710e056ef7711 # 0.24.0
+        uses: commitizen-tools/commitizen-action@5b0848cd060263e24602d1eba03710e056ef7711  # 0.24.0
         with:
           changelog_increment_filename: _changelog.md
           github_token: ${{ github.token }}
@@ -37,7 +34,7 @@ jobs:
 
       - name: Download artifacts
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4
         with:
           name: sopsy-dist
           path: ./dist/
@@ -45,7 +42,7 @@ jobs:
       - name: Release
         id: release
         if: env.PREVIOUS_REVISION != env.REVISION
-        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8  # v2
         with:
           body_path: _changelog.md
           files: ./dist/*
@@ -61,7 +58,7 @@ jobs:
     environment: release
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4
         with:
           name: sopsy-dist
           path: ./dist/

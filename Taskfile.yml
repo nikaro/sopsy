@@ -3,21 +3,7 @@ version: "3"
 set: [errexit, nounset, pipefail]
 shopt: [globstar]
 
-includes:
-  lint:
-    taskfile: https://github.com/nikaro/meta/raw/tasks-v1/taskfiles/lint.yml
-    internal: true
-  format:
-    taskfile: https://github.com/nikaro/meta/raw/tasks-v1/taskfiles/format.yml
-    internal: true
-
 tasks:
-  init:
-    desc: Initialize repositry
-    cmds:
-      - git config core.hooksPath .githooks
-      - git config commit.template .gitmessage
-
   lock:
     desc: Generate lockfile
     sources:
@@ -41,41 +27,9 @@ tasks:
 
   lint:
     desc: Run linters
+    aliases: [format]
     cmds:
-      - task: lint:default
-      - task: lint:python
-
-  lint:python:
-    desc: Lint Python code
-    deps: [sync]
-    sources:
-      - ./pyproject.toml
-      - ./requirements.lock
-      - ./requirements-dev.lock
-      - ./src/**/*.py
-      - ./tests/**/*.py
-    cmds:
-      - uv run ruff format --check
-      - uv run ruff check
-      - uv run basedpyright ./src/
-
-  format:
-    desc: Run formatters
-    cmds:
-      - task: format:default
-      - task: format:python
-
-  format:python:
-    desc: Format Python code
-    deps: [sync]
-    sources:
-      - ./pyproject.toml
-      - ./requirements.lock
-      - ./requirements-dev.lock
-      - ./src/**/*.py
-      - ./tests/**/*.py
-    cmds:
-      - uv run ruff format
+      - pre-commit run --all-files --verbose
 
   test:
     desc: Run tests
