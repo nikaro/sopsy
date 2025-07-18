@@ -217,7 +217,7 @@ class Sops:
         Returns:
             The value of the given key, or the default value.
         """
-        data: dict[Any, Any] = self.decrypt()  # pyright: ignore[reportAssignmentType]
+        data: dict[Any, Any] = self.decrypt()  # type: ignore[assignment]
         return data.get(key) or default
 
     def rotate(self, *, to_dict: bool = True) -> str | bytes | dict[str, Any] | None:
