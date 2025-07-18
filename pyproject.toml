@@ -2,10 +2,11 @@
 name = "sopsy"
 version = "1.2.1"
 description = "SOPS Python wrapper library"
-authors = [{ name = "Nicolas Karolak", email = "nicolas@karolak.fr" }]
-dependencies = ["pyyaml>=6.0.1"]
 readme = "README.md"
 requires-python = ">= 3.8"
+license = { text = "MIT" }
+authors = [{ name = "Nicolas Karolak", email = "nicolas@karolak.fr" }]
+keywords = ["sops"]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Developers",
@@ -17,26 +18,21 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed",
 ]
-license = { text = "MIT" }
-keywords = ["sops"]
+dependencies = ["pyyaml>=6.0.1"]
 
 [project.urls]
-Homepage = "https://sopsy.nikaro.net"
-Repository = "https://github.com/nikaro/sopsy"
-Issues = "https://github.com/nikaro/sopsy/issues"
 Changelog = "https://sopsy.nikaro.net/changelog/"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+Homepage = "https://sopsy.nikaro.net"
+Issues = "https://github.com/nikaro/sopsy/issues"
+Repository = "https://github.com/nikaro/sopsy"
 
 [dependency-groups]
 dev = [
-  "basedpyright>=1.15.1",
   "black>=24.8.0",
   "mkdocs-coverage>=1.1.0",
   "mkdocs-material>=9.5.34",
   "mkdocstrings[python]>=0.26.1",
+  "mypy>=1.14.1",
   "pytest-cov>=5.0.0",
   "pytest>=7.4.3",
   "ruff>=0.6.3",
@@ -44,6 +40,14 @@ dev = [
   "types-pyyaml>=6.0.12.20240808",
   "typing-extensions>=4.12.2",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.commitizen]
+version_provider = "pep621"
+update_changelog_on_bump = true
 
 [tool.hatch.metadata]
 allow-direct-references = true
@@ -64,12 +68,3 @@ convention = "pep257"
 
 [tool.ruff.lint.pylint]
 max-args = 15
-
-[tool.basedpyright]
-reportAny = false
-reportExplicitAny = false
-reportImplicitOverride = false
-
-[tool.commitizen]
-version_provider = "pep621"
-update_changelog_on_bump = true
