@@ -1,6 +1,6 @@
 [project]
 name = "sopsy"
-version = "1.2.0"
+version = "1.2.1"
 description = "SOPS Python wrapper library"
 readme = "README.md"
 requires-python = ">= 3.8"

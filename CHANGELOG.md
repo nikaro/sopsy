@@ -1,3 +1,13 @@
+## 1.2.1 (2025-07-26)
+
+### Fix
+
+- expose SopsyInputSource at root package level
+
+### Refactor
+
+- simplify bin attribute setting
+
 ## 1.2.0 (2025-07-02)
 
 ### Feat
