@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> The project has moved to SourceHut: https://sr.ht/~nka/sopsy/
+
 # SOPSy
 
 [![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fgithub.com%2Fnikaro%2Fsopsy%2Fraw%2Fmain%2Fpyproject.toml)](https://www.python.org/downloads/)
