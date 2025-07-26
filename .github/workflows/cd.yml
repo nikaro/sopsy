@@ -19,6 +19,8 @@ jobs:
       contents: write
     outputs:
       id: ${{ steps.release.outputs.id }}
+      revision: ${{ env.REVISION }}
+      previous_revision: ${{ env.PREVIOUS_REVISION }}
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
@@ -64,7 +66,7 @@ jobs:
           path: ./dist/
 
       - name: Publish package to PyPI
-        if: env.PREVIOUS_REVISION != env.REVISION
+        if: needs.release.outputs.previous_revision != needs.release.outputs.revision
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           attestations: true
